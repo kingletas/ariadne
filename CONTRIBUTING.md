@@ -35,6 +35,18 @@ Ingest has fixtures instead, under `tests/fixtures/ingest`, one per branch — e
 
 **`make snapshot` re-records the ingest table. Only run it after a change you meant to make, and read the diff** — it is the difference between a fix and a regression nobody noticed.
 
+## The measured bands
+
+`ariadne --corpus` reports a thousand Gutenberg texts, and `tools/corpus/` is what produced them — a sampling frame from the catalogue, a seeded stratified draw, a fetch at one request a second, and a measure that **imports this package rather than reimplementing it**, so the bands are made by the code that reads them back.
+
+```bash
+make corpus STAGE=all
+```
+
+Five stages, each resumable and each writing its own artefact, into `~/.local/share/ariadne-corpus`. `STAGE=build` re-aggregates without re-downloading anything, and writes straight to `src/ariadne/data/corpus.json` — the file the package carries. **There is no copy step, on purpose:** a copy somebody has to remember to make is one that eventually differs.
+
+`build` is reproducible. Given the same measurements it writes the same file, byte for byte, because the `measured` date comes from the measurement rather than from the day you ran it.
+
 ## What refusing looks like
 
 Adding a refusal is a feature here, not a gap. It goes in the register with the measurement or the citation that settles it, and `ariadne --refusals` prints it.

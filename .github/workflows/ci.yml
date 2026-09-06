@@ -52,7 +52,7 @@ jobs:
           # -S style is the strictest, and stated rather than defaulted: the
           # default has moved between versions, and the runner's shellcheck is
           # not the one on a laptop.
-          shellcheck -S style $(grep -rl '^#!/usr/bin/env bash' scripts packaging)
+          shellcheck -S style $(grep -rl '^#!/usr/bin/env bash' scripts packaging tools)
 
       - name: Suite
         run: uv run pytest -q

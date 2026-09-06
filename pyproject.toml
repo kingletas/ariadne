@@ -71,6 +71,15 @@ ignore = [
 # E501: the page template holds the browser's own JavaScript. Wrapping a line
 # inside it changes the file the reader is sent.
 "src/ariadne/render/page.py" = ["E501"]
+# S311: the draw is seeded on purpose. Reproducing the same sample from the same
+# seed is the point; nothing here is a secret.
+"tools/corpus/draw.py" = ["S311"]
+# S310: fetching is what this stage is for. Both URLs are https literals with a
+# book id substituted in, so no scheme and no host comes from anywhere else.
+# S112: a thousand-book fetch survives its failures rather than stopping at the
+# first, and each one is recorded in `failed` with its id and title, counted as
+# it goes and printed at the end. Nothing is swallowed.
+"tools/corpus/fetch.py" = ["S310", "S112"]
 # S310: the only URL this opens is the Anthropic endpoint, built from a
 # constant. Nothing from a book or a form reaches it.
 "src/ariadne/ai/*" = ["S310"]

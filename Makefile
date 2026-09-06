@@ -41,7 +41,7 @@ inspect: ## Say what ariadne detects in BOOK= without writing anything
 lint: ## Static checks: the linter, the formatter, and the shell
 	@$(UV) run ruff check .
 	@$(UV) run ruff format --check .
-	@shellcheck -S style $(shell grep -rl '^#!/usr/bin/env bash' scripts packaging 2>/dev/null)
+	@shellcheck -S style $(shell grep -rl '^#!/usr/bin/env bash' scripts packaging tools 2>/dev/null)
 
 .PHONY: format
 format: ## Apply the formatter
@@ -55,6 +55,10 @@ test: ## The unit suite, the layering check and the goldens
 .PHONY: smoke
 smoke: venv ## Drive the real window and save a PNG of each view
 	@$(UV) run python scripts/gui-smoke.py $(if $(MODEL),"$(MODEL)",)
+
+.PHONY: corpus
+corpus: ## Rebuild the measured bands: make corpus STAGE=build (frame|draw|fetch|measure|build|all)
+	@$(ROOT_DIR)/tools/corpus/ariadne-corpus $(or $(STAGE),-h) $(ARGS)
 
 .PHONY: snapshot
 snapshot: ## Re-record the ingest baseline. Only after a deliberate change, and read the diff

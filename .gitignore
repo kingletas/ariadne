@@ -5,6 +5,11 @@
 # missed.
 !**/*.sh
 
+# The same file also excludes `tools/*`, which swallowed this repository's
+# corpus pipeline whole -- six files, silently, with a clean `git status`.
+# `tests/test_repository.py` is what stops the next pattern doing it again.
+!tools/**
+
 __pycache__/
 *.py[cod]
 .venv/

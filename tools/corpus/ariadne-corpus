@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+#
+# ariadne-corpus — rebuild the measured corpus behind every band Ariadne reports.
+#
+# Four stages, each resumable, each writing its own artefact so a stage can be
+# re-run without repeating the one before it:
+#
+#     frame     the sampling frame, from the Project Gutenberg catalogue CSV
+#     draw      a seeded stratified sample from that frame
+#     fetch     the texts, one request per second, replacing what will not download
+#     measure   Ariadne's own code over each text
+#     build     the bands, written as corpus.json
+#
+# Usage:
+#     ariadne-corpus frame                    print the frame and its strata
+#     ariadne-corpus draw [N]                 draw a sample (default 1000)
+#     ariadne-corpus fetch [LIMIT]            download the drawn sample
+#     ariadne-corpus measure                  measure everything downloaded
+#     ariadne-corpus build [-o PATH]          write corpus.json where the package reads it
+#     ariadne-corpus all [N]                  every stage in order
+#     ariadne-corpus -h                       this header
+#
+# Environment overrides:
+#     CORPUS_WORK    working directory        (default ~/.local/share/ariadne-corpus)
+#     CORPUS_CSV     catalogue CSV            (default $CORPUS_WORK/pg_catalog.csv)
+#     CORPUS_SEED    draw seed                (default 20260905)
+#
+# Why this exists at all: the 259-book corpus of 2026-09-05 kept only its measured
+# output. The frame, the draw and the book list were not saved, so it could not be
+# extended and had to be rebuilt from nothing. Every stage here writes down what it
+# did, and `build` puts the frame definition and the full book list inside
+# corpus.json itself, so the next person can extend rather than restart.
+#
+# The texts themselves are public-domain Project Gutenberg files. Nothing but
+# counts and ratios leaves the measure stage — no book text is stored or copied
+# into corpus.json, which is the same line the ariadne tool draws.
+
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(cd "$HERE/../.." && pwd)"
+SHIPPED="$REPO/src/ariadne/data/corpus.json"
+
+WORK="${CORPUS_WORK:-$HOME/.local/share/ariadne-corpus}"
+CSV="${CORPUS_CSV:-$WORK/pg_catalog.csv}"
+SEED="${CORPUS_SEED:-20260905}"
+CATALOGUE_URL="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+
+usage() { sed -n '2,/^set -euo/p' "${BASH_SOURCE[0]}" | sed '$d; s/^# \{0,1\}//'; }
+
+need_csv() {
+    mkdir -p "$WORK"
+    if [ ! -s "$CSV" ]; then
+        echo "fetching the Gutenberg catalogue (~21 MB) -> $CSV" >&2
+        curl -fsSL -o "$CSV" "$CATALOGUE_URL"
+    fi
+}
+
+case "${1:-}" in
+    -h|--help|"")  usage; exit 0 ;;
+esac
+
+cmd="$1"; shift
+
+case "$cmd" in
+    frame)
+        need_csv
+        CORPUS_CSV="$CSV" python3 "$HERE/frame.py"
+        ;;
+    draw)
+        need_csv
+        CORPUS_CSV="$CSV" CORPUS_SEED="$SEED" \
+            python3 "$HERE/draw.py" "$WORK/sample.json" "${1:-1000}"
+        ;;
+    fetch)
+        [ -s "$WORK/sample.json" ] || { echo "no sample yet — run: ariadne-corpus draw" >&2; exit 2; }
+        python3 "$HERE/fetch.py" "$WORK/sample.json" "$WORK/texts" "${1:-}"
+        ;;
+    measure)
+        [ -d "$WORK/texts" ] || { echo "nothing downloaded — run: ariadne-corpus fetch" >&2; exit 2; }
+        python3 "$HERE/measure.py" "$WORK/texts" "$WORK/measured.json"
+        ;;
+    build)
+        # Written straight to the file the package ships. It used to land in the
+        # working directory with a `cp` printed underneath, and a copy somebody
+        # has to remember to make is a copy that eventually differs.
+        out="$SHIPPED"
+        if [ "${1:-}" = "-o" ]; then
+            out="$2"
+            shift 2
+        fi
+        python3 "$HERE/aggregate.py" "$WORK/measured.json" "$WORK/sample.json" "$out"
+        echo
+        echo "wrote $out"
+        if [ "$out" = "$SHIPPED" ]; then
+            echo "this is the file the .deb and the Flatpak carry; commit it"
+        fi
+        ;;
+    all)
+        n="${1:-1000}"
+        "${BASH_SOURCE[0]}" draw "$n"
+        "${BASH_SOURCE[0]}" fetch
+        "${BASH_SOURCE[0]}" measure
+        "${BASH_SOURCE[0]}" build
+        ;;
+    *)
+        echo "unknown command: $cmd" >&2
+        usage >&2
+        exit 2
+        ;;
+esac
