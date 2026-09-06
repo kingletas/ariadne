@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+#
+# verify-package -- build the .deb and prove everything about it that can be
+# proved without root.
+#
+# Usage:
+#   scripts/verify-package
+#
+# A package that builds is not a package that works. This unpacks it and runs
+# the shipped tree the way the installed launcher would -- the same system
+# interpreter, the same sys.path -- so a missing module, a dropped data file or
+# a wrong path fails here rather than in front of somebody.
+#
+# What it cannot do is `apt install`, which needs root. The two commands for
+# that are printed at the end; CI runs them on every tag.
+
+# Several small predicates below are run through `expect`, which invokes them
+# by name in "$@". shellcheck cannot see an indirect call and calls each dead.
+# shellcheck disable=SC2329,SC2317
+
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+app_id="com.kingletas.Ariadne"
+version="$("$here/packaging/version.sh")"
+failed=0
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+check() {
+	if [ "$1" -eq 0 ]; then
+		echo "ok    $2"
+	else
+		echo "FAIL  $2"
+		failed=1
+	fi
+}
+
+# `cmd; check $?` looks fine and is not: under `set -e` a failing cmd kills the
+# script before check runs, so the verifier would die silently exactly when it
+# had something to report. Everything is graded through here instead.
+expect() {
+	local label="$1"
+	shift
+	if "$@" > /dev/null 2>&1; then
+		check 0 "$label"
+	else
+		check 1 "$label"
+	fi
+}
+
+expect "the package builds — ariadne_${version}_all.deb" \
+	"$here/packaging/deb/build.sh" "$work"
+package="$work/ariadne_${version}_all.deb"
+
+control="$(dpkg-deb -I "$package")"
+grep_control() { printf '%s' "$control" | grep -q "$1"; }
+expect "Architecture: all" grep_control "^ Architecture: all$"
+expect "the toolkit is a Recommends, not a Depends" grep_control "^ Recommends: python3-gi"
+
+root="$work/unpacked"
+dpkg-deb -x "$package" "$root"
+
+for path in \
+	usr/bin/ariadne \
+	usr/lib/ariadne/ariadne/cli/main.py \
+	usr/lib/ariadne/ariadne/data/corpus.json \
+	"usr/share/applications/$app_id.desktop" \
+	"usr/share/icons/hicolor/scalable/apps/$app_id.svg" \
+	"usr/share/metainfo/$app_id.metainfo.xml" \
+	usr/share/doc/ariadne/copyright
+do
+	expect "ships $path" test -e "$root/$path"
+done
+
+# Architecture: all is a claim about the contents, so it is read back out of
+# the staged tree rather than trusted.
+compiled="$(find "$root" \( -name '*.so' -o -name '*.pyd' -o -name '__pycache__' \) | head -5)"
+expect "nothing compiled and no bytecode cache" test -z "$compiled"
+[ -z "$compiled" ] || printf '      %s\n' "$compiled"
+
+expect "the desktop entry names an absolute launcher" \
+	grep -q '^Exec=/usr/bin/ariadne' "$root/usr/share/applications/$app_id.desktop"
+
+# The shipped tree, run the way /usr/bin/ariadne runs it. Anything that only
+# works from the source checkout fails here.
+run() { /usr/bin/python3 -c '
+import sys
+sys.path.insert(0, sys.argv.pop(1))
+from ariadne.cli.main import main
+sys.exit(main())' "$root/usr/lib/ariadne" "$@"; }
+
+says() { run "$1" | grep -q "$2"; }
+expect "the invariant holds in the shipped tree" run --self-test
+expect "the measured bands travelled with it"    says --corpus "stratified"
+expect "the refusal register is readable"        says --refusals "WILL NOT DO"
+expect "the usage text is readable"              says -h "^Usage:"
+
+# --doctor is allowed to say either thing; what it must never do is raise. It
+# exits non-zero when the toolkit is absent, so its output is captured rather
+# than piped -- under pipefail a pipeline would inherit that status.
+doctor="$(run --doctor 2>&1 || true)"
+answered() { printf '%s' "$doctor" | grep -qE "can open here|cannot open here yet"; }
+expect "the doctor answers rather than crashing" answered
+
+fixture="$here/tests/fixtures/ingest/chapter_titled.txt"
+run "$fixture" -o "$work/page.html" > /dev/null
+# The template's placeholder surviving into the output means the substitution
+# never happened, so its absence is what proves the page rendered.
+if grep -q "__DATA__" "$work/page.html"; then
+	check 1 "the page rendered"
+else
+	check 0 "the page rendered"
+fi
+
+echo
+if [ "$failed" -eq 0 ]; then
+	cat <<NEXT
+Everything that can be checked without root passed.
+
+The install itself needs root, so it is yours to run:
+
+    sudo apt install $package
+    /usr/bin/ariadne --doctor && /usr/bin/ariadne --self-test
+
+The full path is deliberate: \`make install\` puts a wrapper in ~/bin, which
+usually comes first on PATH, so a bare \`ariadne\` would test that one instead
+and the package would never be reached.
+
+And to take it back off:
+
+    sudo apt purge ariadne
+NEXT
+	echo
+	echo "(that package is in a temporary directory — run \`make deb\` for a copy in dist/)"
+fi
+
+exit "$failed"

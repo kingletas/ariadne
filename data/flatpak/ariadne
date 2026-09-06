@@ -1,0 +1,4 @@
+#!/bin/sh
+# Ariadne inside its sandbox. The interpreter is the runtime's, which is the
+# one that can see the GObject typelibs the window needs.
+exec /usr/bin/python3 -c 'import sys; sys.path.insert(0, "/app/lib/ariadne"); from ariadne.cli.main import main; sys.exit(main())' "$@"

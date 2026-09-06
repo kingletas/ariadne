@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#
+# release -- promote the working tree to a release version.
+#
+# Usage:
+#   scripts/release 0.2.0
+#   scripts/release -n 0.2.0      show what would change, write nothing
+#   scripts/release -h
+#
+# The version is typed once, here. This writes __version__ -- which pyproject
+# and every build script read through packaging/version.sh -- retitles the
+# changelog's Unreleased section with that version and today's date, and adds
+# the release entry a software centre reads.
+#
+# Nothing is committed and no tag is created. Read the diff, commit it, then
+# `git tag v<version> && git push --tags`, which is what triggers the build.
+#
+# Refuses a version that already has a changelog section, and refuses to
+# release an Unreleased section with nothing under it -- a release whose notes
+# are empty is a release nobody can read.
+
+set -euo pipefail
+
+dry_run=0
+while getopts "nh" opt; do
+	case "$opt" in
+		n) dry_run=1 ;;
+		h) sed -n '2,25p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+		*) exit 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+version="${1:-}"
+if [ -z "$version" ]; then
+	echo "release: a version is required, e.g. scripts/release 0.2.0" >&2
+	exit 2
+fi
+if ! printf '%s' "$version" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+	echo "release: '$version' is not MAJOR.MINOR.PATCH" >&2
+	exit 2
+fi
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+init="$here/src/ariadne/__init__.py"
+changelog="$here/CHANGELOG.md"
+metainfo="$here/data/com.kingletas.Ariadne.metainfo.xml"
+today="$(date -u +%Y-%m-%d)"
+
+if grep -qF "## [$version]" "$changelog"; then
+	echo "release: CHANGELOG.md already has a section for $version" >&2
+	exit 1
+fi
+
+unreleased="$(awk '
+	/^## \[Unreleased\]/ { collecting = 1; next }
+	collecting && /^## \[/ { exit }
+	collecting { print }
+' "$changelog")"
+
+if [ -z "$(printf '%s' "$unreleased" | tr -d '[:space:]')" ]; then
+	echo "release: the Unreleased section is empty; there is nothing to release" >&2
+	exit 1
+fi
+
+report() { printf '  %s\n' "$1"; }
+
+echo "ariadne $(packaging/version.sh) -> $version   ($today)"
+report "src/ariadne/__init__.py   __version__"
+report "CHANGELOG.md              Unreleased -> [$version] — $today"
+report "data/…metainfo.xml        a <release> entry"
+
+if [ "$dry_run" -eq 1 ]; then
+	echo
+	echo "dry run: nothing written."
+	exit 0
+fi
+
+sed -i "s/^__version__ = \".*\"$/__version__ = \"$version\"/" "$init"
+sed -i "0,/^## \[Unreleased\]$/s//## [Unreleased]\n\n## [$version] — $today/" "$changelog"
+
+# The paragraph a software centre shows is seeded rather than written: no
+# script can say what a release means to somebody. `make check` refuses the
+# placeholder, so it cannot ship unwritten.
+python3 - "$metainfo" "$version" "$today" <<'PY'
+import sys
+
+path, version, today = sys.argv[1], sys.argv[2], sys.argv[3]
+text = open(path, encoding="utf-8").read()
+entry = (f'    <release version="{version}" date="{today}">\n'
+         f'      <description>\n'
+         f'        <p>TODO: what this release means to somebody using it.</p>\n'
+         f'      </description>\n'
+         f'    </release>\n')
+open(path, "w", encoding="utf-8").write(text.replace("  <releases>\n", "  <releases>\n" + entry, 1))
+PY
+
+echo
+echo "written. Now:"
+echo "  1. write the <release> paragraph in data/com.kingletas.Ariadne.metainfo.xml"
+echo "  2. make check"
+echo "  3. git commit, then git tag v$version && git push --tags"

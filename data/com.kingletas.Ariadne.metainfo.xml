@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.kingletas.Ariadne</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Ariadne</name>
+  <summary>A reading companion that never shows you past your bookmark</summary>
+
+  <description>
+    <p>
+      Ariadne reads a book you already own and builds the cast as you read it.
+      Move the bookmark to the chapter you are on and everything is clipped to
+      that point: who you have met, who you have not seen for a while, who
+      tends to be in the room with whom, and where the book has been.
+    </p>
+    <p>
+      The spoiler rule is structural rather than a filter. Every view is built
+      from the chapters behind your position, so there is no later data waiting
+      in the page to be revealed by a bug.
+    </p>
+    <p>
+      Nothing is asserted that cannot be proved. Two names may be one person or
+      two, and Ariadne proposes only what it can show and asks you to rule; the
+      same is true of where a chapter is set. Your rulings live in a plain file
+      beside the book, which you can read, edit, or hand to somebody else.
+    </p>
+    <p>
+      It makes no network request and keeps no account. Two optional commands
+      need an API key of your own; nothing else does.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">com.kingletas.Ariadne.desktop</launchable>
+  <url type="homepage">https://github.com/kingletas/ariadne</url>
+  <url type="bugtracker">https://github.com/kingletas/ariadne/issues</url>
+
+  <developer id="com.kingletas">
+    <name>Luis Tineo</name>
+  </developer>
+
+  <content_rating type="oars-1.1"/>
+
+  <categories>
+    <category>Office</category>
+    <category>Viewer</category>
+  </categories>
+
+  <keywords>
+    <keyword>book</keyword>
+    <keyword>reading</keyword>
+    <keyword>epub</keyword>
+    <keyword>characters</keyword>
+    <keyword>spoiler</keyword>
+  </keywords>
+
+  <releases>
+    <release version="0.1.0" date="2026-09-06">
+      <description>
+        <p>First release. A prototype: the reader page, the desktop reader and the command line, over a corpus of a thousand books measured rather than assumed.</p>
+      </description>
+    </release>
+  </releases>
+</component>

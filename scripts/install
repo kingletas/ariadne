@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+#
+# Installs the ariadne entry point into a prefix, defaulting to ~/bin, plus a
+# desktop entry and an icon so the reader is in the launcher and not only on
+# PATH.
+#
+# The tool is a Python package, so what lands in the prefix is a wrapper that
+# runs it out of this source tree through uv. That keeps one copy of the code.
+#
+# Nothing here writes outside $HOME.
+
+set -euo pipefail
+
+prefix="${1:-$HOME/bin}"
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+app_id="com.kingletas.Ariadne"
+
+mkdir -p "$prefix"
+
+target="$prefix/ariadne"
+rm -f "$target"
+
+cat > "$target" <<WRAPPER
+#!/usr/bin/env bash
+#
+# ariadne — build a spoiler-safe reading companion from a book file.
+#
+# Installed by \`make install\` in $here. Edit the source there, then reinstall;
+# never edit this file.
+#
+# Usage:
+#     ariadne <book.epub> --app          the desktop reader
+#     ariadne <book.epub> -o page.html   a page you can send to somebody
+#     ariadne <book.epub> --inspect      what it detected, writing nothing
+#     ariadne --doctor                   whether the desktop reader can open
+#     ariadne --refusals                 what it will not do, and why
+#     ariadne -h
+
+set -euo pipefail
+exec uv run --project "$here" ariadne "\$@"
+WRAPPER
+
+chmod 0555 "$target"
+echo "installed ariadne to $target"
+
+# The desktop entry names the launcher by absolute path, so it is only written
+# when that path is somewhere that will still exist. A staging prefix under
+# /tmp once put a dead Exec= into the applications menu, where it shadowed the
+# correct entry the package had installed and the application simply would not
+# start.
+case "$prefix" in
+	/tmp/*|/var/tmp/*)
+		echo "skipping the desktop entry: $prefix is temporary"
+		exit 0
+		;;
+esac
+
+# A relative Exec= is resolved against nothing in particular, and $PATH is not
+# the launcher's.
+apps="$HOME/.local/share/applications"
+icons="$HOME/.local/share/icons/hicolor/scalable/apps"
+metainfo="$HOME/.local/share/metainfo"
+mkdir -p "$apps" "$icons" "$metainfo"
+
+sed "s|@LAUNCHER@|$target|" "$here/data/$app_id.desktop" > "$apps/$app_id.desktop"
+chmod 0644 "$apps/$app_id.desktop"
+install -m 0644 "$here/data/$app_id.svg" "$icons/$app_id.svg"
+install -m 0644 "$here/data/$app_id.metainfo.xml" "$metainfo/$app_id.metainfo.xml"
+echo "installed the desktop entry, the icon and the metainfo"
+
+# Without these the launcher shows a stale name and a missing icon until the
+# session is restarted. Neither is fatal, so neither stops the install.
+if command -v update-desktop-database > /dev/null; then
+	update-desktop-database -q "$apps" || true
+fi
+if command -v gtk-update-icon-cache > /dev/null; then
+	gtk-update-icon-cache -qtf "$HOME/.local/share/icons/hicolor" 2> /dev/null || true
+fi
+
+echo "source stays in $here — edit there and reinstall"
+
+if ! "$target" --doctor > /dev/null 2>&1; then
+	echo
+	echo "note: the command line is installed and works, but the desktop reader"
+	echo "      cannot open here yet. Run \`ariadne --doctor\` for what is missing."
+fi

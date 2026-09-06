@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>Ariadne</title>
+  <desc>A thread out of the labyrinth, with the bookmark on it.</desc>
+  <!-- Anything before the root element is refused by librsvg's loader, so the
+       note about this drawing lives inside it. Strokes and no gradients, so it
+       holds up against a light or a dark shelf. -->
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="#F7F3EA"/>
+  <g fill="none" stroke="#2F6F68" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M64 24 A40 40 0 1 1 24 64" stroke-width="7"/>
+    <path d="M64 40 A24 24 0 1 0 88 64" stroke-width="7"/>
+    <path d="M88 64 A24 24 0 0 1 64 88" stroke-width="7" opacity="0.45"/>
+  </g>
+  <circle cx="64" cy="88" r="9" fill="#B8832F"/>
+</svg>

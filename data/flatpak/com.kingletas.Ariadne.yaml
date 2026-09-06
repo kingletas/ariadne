@@ -1,0 +1,62 @@
+# Flatpak manifest for Ariadne.
+#
+# Build and install locally:
+#   flatpak install -y flathub org.gnome.Platform//50 org.gnome.Sdk//50
+#   flatpak-builder --user --install --force-clean build data/flatpak/com.kingletas.Ariadne.yaml
+#
+# Nothing is downloaded at build time and nothing is pinned, because there is
+# nothing to pin: the engine is standard library only and the window uses the
+# GTK and PyGObject already in the GNOME runtime. The package is copied into
+# place and given a launcher, which is what the .deb does too.
+app-id: com.kingletas.Ariadne
+runtime: org.gnome.Platform
+runtime-version: "50"
+sdk: org.gnome.Sdk
+command: ariadne
+
+finish-args:
+  # Books live wherever their owner keeps them, and the rulings file is written
+  # beside the book so that deleting Ariadne leaves it intact. The file portal
+  # grants the one file somebody picked and not its neighbours, so it cannot
+  # write that sidecar -- home access is what the promise costs.
+  - --filesystem=home
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # No network at all. Flatpak grants none by default; saying so keeps it a
+  # decision rather than an omission. `--explain` and `--relations` are the only
+  # things here that would want it, and they are not what this ships.
+  - --unshare=network
+
+modules:
+  - name: ariadne
+    buildsystem: simple
+    build-commands:
+      # Copied rather than pip-installed: the package has no dependencies and no
+      # compiled anything, so a build backend would be the only thing needing to
+      # be fetched and pinned.
+      - install -d ${FLATPAK_DEST}/lib/ariadne
+      - cp -r src/ariadne ${FLATPAK_DEST}/lib/ariadne/ariadne
+      - find ${FLATPAK_DEST}/lib/ariadne -name '__pycache__' -type d -exec rm -rf {} +
+      - install -Dm755 data/flatpak/ariadne ${FLATPAK_DEST}/bin/ariadne
+      - install -Dm644 data/com.kingletas.Ariadne.desktop
+        ${FLATPAK_DEST}/share/applications/com.kingletas.Ariadne.desktop
+      - install -Dm644 data/com.kingletas.Ariadne.metainfo.xml
+        ${FLATPAK_DEST}/share/metainfo/com.kingletas.Ariadne.metainfo.xml
+      - install -Dm644 data/com.kingletas.Ariadne.svg
+        ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/com.kingletas.Ariadne.svg
+      - sed -i 's|@LAUNCHER@|ariadne|'
+        ${FLATPAK_DEST}/share/applications/com.kingletas.Ariadne.desktop
+    sources:
+      - type: dir
+        path: ../..
+        # Without these the whole checkout is copied into the build directory,
+        # virtualenv and build products included.
+        skip:
+          - .git
+          - .venv
+          - build
+          - dist
+          - .flatpak-builder
+          - .pytest_cache
+          - .ruff_cache

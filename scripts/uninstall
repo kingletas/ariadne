@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# Removes what `scripts/install` put on the system. Never touches the source,
+# and never touches a sidecar: the reader's rulings are theirs and live beside
+# their books.
+
+set -euo pipefail
+
+prefix="${1:-$HOME/bin}"
+app_id="com.kingletas.Ariadne"
+
+for path in \
+	"$prefix/ariadne" \
+	"$HOME/.local/share/applications/$app_id.desktop" \
+	"$HOME/.local/share/icons/hicolor/scalable/apps/$app_id.svg" \
+	"$HOME/.local/share/metainfo/$app_id.metainfo.xml"
+do
+	if [ -e "$path" ]; then
+		rm -f "$path"
+		echo "removed $path"
+	fi
+done
+
+if command -v update-desktop-database > /dev/null; then
+	update-desktop-database -q "$HOME/.local/share/applications" || true
+fi

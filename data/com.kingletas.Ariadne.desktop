@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Ariadne
+GenericName=Reading Companion
+Comment=Build a book's cast as you read, and never see past your bookmark
+Exec=@LAUNCHER@ --app %f
+Icon=com.kingletas.Ariadne
+Terminal=false
+Categories=Office;Viewer;GNOME;GTK;
+MimeType=application/epub+zip;text/plain;text/markdown;
+Keywords=book;reading;cast;characters;spoiler;epub;bookmark;
+StartupNotify=true

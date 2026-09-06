@@ -1,0 +1,14 @@
+# Check every text file out with LF on every platform. A CRLF clone makes the
+# formatter fail on the whole tree at once, which reads as the tree being
+# misformatted rather than as a line ending.
+* text=auto eol=lf
+
+*.png binary
+*.epub binary
+
+# Generated fixtures and baselines: diffable, but never reformatted. GitHub is
+# told to fold them out of the language statistics too -- 3.6 MB of extracted
+# JSON would otherwise make this look like a JSON project.
+tests/golden/** linguist-generated=true
+tests/fixtures/** linguist-generated=true
+src/ariadne/data/corpus.json linguist-generated=true

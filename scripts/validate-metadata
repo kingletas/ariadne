@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+#
+# Checks the desktop entry, the icon and the AppStream metadata before they
+# reach anybody. A launcher entry that fails to parse does not error -- it
+# simply never appears, which is the kind of break nobody reports.
+#
+# Uses whichever validators are installed and says which it skipped, rather
+# than passing silently because none were there.
+
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+app_id="com.kingletas.Ariadne"
+data="$here/data"
+failed=0
+skipped=()
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# Exec= carries a placeholder in the repository and a real path once installed.
+# The validator refuses the placeholder, so it grades what a user would get.
+sed "s|@LAUNCHER@|/usr/bin/ariadne|" "$data/$app_id.desktop" > "$work/$app_id.desktop"
+
+if command -v desktop-file-validate > /dev/null; then
+	desktop-file-validate "$work/$app_id.desktop" && echo "ok    desktop entry"
+else
+	skipped+=("desktop-file-validate (desktop-file-utils)")
+fi
+
+if command -v appstreamcli > /dev/null; then
+	appstreamcli validate --no-net --pedantic "$data/$app_id.metainfo.xml" \
+		&& echo "ok    metainfo" || failed=1
+else
+	skipped+=("appstreamcli (appstream)")
+fi
+
+# Parsing as XML is not enough. A comment between the declaration and the root
+# element parses perfectly and is refused by librsvg's loader, which is what
+# actually draws the icon -- and the only symptom is a warning on stderr and a
+# blank space in the launcher.
+/usr/bin/python3 - "$data/$app_id.svg" <<'PY' || failed=1
+import sys
+import xml.etree.ElementTree as ET
+
+path = sys.argv[1]
+root = ET.parse(path).getroot()
+assert root.tag.endswith("svg"), "the icon is not an SVG"
+assert root.get("viewBox"), "the icon has no viewBox, so it cannot scale"
+
+try:
+    import gi
+
+    gi.require_version("GdkPixbuf", "2.0")
+    from gi.repository import GdkPixbuf, GLib
+except (ImportError, ValueError):
+    print("ok    icon (parsed; not rendered — no GdkPixbuf here)")
+    sys.exit(0)
+
+try:
+    pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+except GLib.Error as why:
+    print(f"FAIL  the icon renders as XML but not as an image: {why.message}")
+    sys.exit(1)
+print(f"ok    icon (renders at {pixbuf.get_width()}x{pixbuf.get_height()})")
+PY
+
+# A seeded release paragraph is what `scripts/release` leaves behind for a
+# person to write. Shipping it would put "TODO" in a software centre.
+if grep -q "TODO:" "$data/$app_id.metainfo.xml"; then
+	echo "FAIL  the metainfo still carries a seeded release paragraph"
+	failed=1
+fi
+
+for required in Name Exec Icon Type Categories; do
+	grep -q "^${required}=" "$work/$app_id.desktop" || {
+		echo "FAIL  desktop entry has no ${required}="
+		failed=1
+	}
+done
+
+if [ ${#skipped[@]} -gt 0 ]; then
+	echo
+	echo "not checked, because these are not installed:"
+	printf '  %s\n' "${skipped[@]}"
+fi
+
+exit "$failed"

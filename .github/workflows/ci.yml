@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.12', '3.13']
+        include:
+          - os: macos-latest
+            python-version: '3.13'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras --dev
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format
+        run: uv run ruff format --check .
+
+      # The suite carries the baselines the refactor was proved against: the
+      # renderer must reproduce sixteen real pages byte for byte, and ingest
+      # must read every fixture the way the recorded table says it does.
+      # Slate checks its shell the same way. The scripts here build the package
+      # and grade it, so a mistake in one is a mistake in the release.
+      - name: Shell
+        if: runner.os == 'Linux'
+        run: |
+          # -S style is the strictest, and stated rather than defaulted: the
+          # default has moved between versions, and the runner's shellcheck is
+          # not the one on a laptop.
+          shellcheck -S style $(grep -rl '^#!/usr/bin/env bash' scripts packaging)
+
+      - name: Suite
+        run: uv run pytest -q
+
+      # A launcher entry that fails to parse does not error, it simply never
+      # appears -- which is the kind of break nobody reports.
+      - name: Desktop entry, icon and AppStream metadata
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y desktop-file-utils appstream
+          scripts/validate-metadata
+
+  engine:
+    name: The engine imports with no toolkit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+
+      # A runner with no GTK on it is the honest version of the claim the
+      # layering test makes in a subprocess. This job exists so that a
+      # dependency creeping into the engine fails here rather than on somebody's
+      # first `pip install`.
+      # The runner has no GTK, which is exactly the machine `--doctor` exists
+      # for. It has to say so rather than raising ModuleNotFoundError.
+      - name: The doctor names what is missing rather than crashing
+        run: |
+          set -euo pipefail
+          uv sync
+          # It exits non-zero on purpose here, which is the whole case being
+          # tested, so its output is captured once rather than piped: under
+          # pipefail a pipeline inherits that status even when grep matches.
+          report="$(uv run ariadne --doctor || true)"
+          printf '%s\n' "$report"
+          printf '%s' "$report" | grep -q "cannot open here yet"
+          printf '%s' "$report" | grep -q "apt install"
+
+      - name: Import every engine module from the wheel alone
+        run: |
+          set -euo pipefail
+          uv build --wheel
+          uv run --isolated --no-project --with dist/*.whl python -c "
+          import importlib, pkgutil, ariadne
+          engine = ('core','ingest','model','decisions','position','analysis','ai')
+          n = 0
+          for m in pkgutil.walk_packages(ariadne.__path__, 'ariadne.'):
+              if m.name.split('.')[1] in engine:
+                  importlib.import_module(m.name); n += 1
+          print(f'{n} engine modules imported with nothing else installed')
+          "

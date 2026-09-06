@@ -1,0 +1,5611 @@
+{
+ "note": "Measured, not chosen. 1000 books drawn by metadata from a frame of 17343, stratified by language of composition, era and genre. A number outside a band is a difference and never a fault.",
+ "measured": "2026-09-05",
+ "sources": {
+  "selection": "1000 Gutenberg texts, stratified",
+  "segmented": 786,
+  "lexical": 786,
+  "strata": "english/romance/germanic/slavic x 5 eras x 6 genres",
+  "lexical_note": "prose measured on the 786 files that segment; 214 of 1000 refuse and cannot be chaptered"
+ },
+ "frame": {
+  "source": "Project Gutenberg catalogue CSV, pg_catalog.csv",
+  "size": 17343,
+  "definition": "Type=Text; Library of Congress class in PR/PS/PQ/PT/PG, which fixes language of composition and survives translation; Subjects or Bookshelves naming fiction or a novel; first author datable.",
+  "excluded": {
+   "not a literature class": 37163,
+   "literature but not fiction": 5897,
+   "not text": 1251,
+   "author not datable": 1347,
+   "not an English-language file": 16287
+  },
+  "strata": "english/romance/germanic/slavic x 5 eras x 6 genres",
+  "cells_occupied": 92,
+  "allocation": "sqrt-proportional, floor 2, cap 40"
+ },
+ "draw": {
+  "seed": 20260905,
+  "supersedes": "the 259-book corpus of 2026-09-05, whose frame and book list were not kept; the two are not comparable"
+ },
+ "curve": {
+  "all": {
+   "0.1": {
+    "n": 786,
+    "min": 0.0,
+    "max": 100.0,
+    "median": 46.429,
+    "p25": 34.974,
+    "p75": 56.873,
+    "mean": 46.297,
+    "sd": 16.7
+   },
+   "0.25": {
+    "n": 786,
+    "min": 7.143,
+    "max": 100.0,
+    "median": 67.078,
+    "p25": 57.205,
+    "p75": 76.923,
+    "mean": 66.302,
+    "sd": 15.764
+   },
+   "0.5": {
+    "n": 786,
+    "min": 10.0,
+    "max": 100.0,
+    "median": 86.43,
+    "p25": 78.571,
+    "p75": 92.857,
+    "mean": 84.118,
+    "sd": 12.589
+   },
+   "0.75": {
+    "n": 786,
+    "min": 30.159,
+    "max": 100.0,
+    "median": 96.375,
+    "p25": 92.095,
+    "p75": 100.0,
+    "mean": 93.836,
+    "sd": 9.074
+   },
+   "last_new": {
+    "n": 786,
+    "min": 0.0,
+    "max": 100.0,
+    "median": 91.667,
+    "p25": 80.0,
+    "p75": 100.0,
+    "mean": 85.832,
+    "sd": 18.138
+   }
+  },
+  "english": {
+   "0.1": {
+    "n": 494,
+    "min": 0.0,
+    "max": 100.0,
+    "median": 46.093,
+    "p25": 34.605,
+    "p75": 55.913,
+    "mean": 45.512,
+    "sd": 16.04
+   },
+   "0.25": {
+    "n": 494,
+    "min": 7.143,
+    "max": 100.0,
+    "median": 67.35,
+    "p25": 57.143,
+    "p75": 76.383,
+    "mean": 65.983,
+    "sd": 15.121
+   },
+   "0.5": {
+    "n": 494,
+    "min": 10.0,
+    "max": 100.0,
+    "median": 86.333,
+    "p25": 78.571,
+    "p75": 92.157,
+    "mean": 84.071,
+    "sd": 12.206
+   },
+   "0.75": {
+    "n": 494,
+    "min": 30.159,
+    "max": 100.0,
+    "median": 96.429,
+    "p25": 92.0,
+    "p75": 100.0,
+    "mean": 93.9,
+    "sd": 8.71
+   },
+   "last_new": {
+    "n": 494,
+    "min": 0.0,
+    "max": 100.0,
+    "median": 91.304,
+    "p25": 80.0,
+    "p75": 100.0,
+    "mean": 85.939,
+    "sd": 17.491
+   }
+  },
+  "translated": {
+   "0.1": {
+    "n": 292,
+    "min": 0.926,
+    "max": 100.0,
+    "median": 47.207,
+    "p25": 36.215,
+    "p75": 58.893,
+    "mean": 47.625,
+    "sd": 17.712
+   },
+   "0.25": {
+    "n": 292,
+    "min": 11.594,
+    "max": 100.0,
+    "median": 66.667,
+    "p25": 57.958,
+    "p75": 77.987,
+    "mean": 66.843,
+    "sd": 16.81
+   },
+   "0.5": {
+    "n": 292,
+    "min": 26.087,
+    "max": 100.0,
+    "median": 86.473,
+    "p25": 78.643,
+    "p75": 93.713,
+    "mean": 84.199,
+    "sd": 13.231
+   },
+   "0.75": {
+    "n": 292,
+    "min": 30.435,
+    "max": 100.0,
+    "median": 96.296,
+    "p25": 92.417,
+    "p75": 100.0,
+    "mean": 93.728,
+    "sd": 9.674
+   },
+   "last_new": {
+    "n": 292,
+    "min": 0.0,
+    "max": 100.0,
+    "median": 92.62,
+    "p25": 79.886,
+    "p75": 100.0,
+    "mean": 85.65,
+    "sd": 19.214
+   }
+  }
+ },
+ "prose": {
+  "all": {
+   "mattr": {
+    "n": 786,
+    "min": 0.435,
+    "max": 0.591,
+    "median": 0.521,
+    "p25": 0.505,
+    "p75": 0.536,
+    "mean": 0.52,
+    "sd": 0.024
+   },
+   "sentence_cv": {
+    "n": 786,
+    "min": 0.503,
+    "max": 1.708,
+    "median": 0.798,
+    "p25": 0.745,
+    "p75": 0.868,
+    "mean": 0.81,
+    "sd": 0.114
+   }
+  },
+  "english": {
+   "mattr": {
+    "n": 494,
+    "min": 0.441,
+    "max": 0.591,
+    "median": 0.523,
+    "p25": 0.506,
+    "p75": 0.537,
+    "mean": 0.521,
+    "sd": 0.024
+   },
+   "sentence_cv": {
+    "n": 494,
+    "min": 0.503,
+    "max": 1.708,
+    "median": 0.8,
+    "p25": 0.746,
+    "p75": 0.863,
+    "mean": 0.809,
+    "sd": 0.112
+   }
+  },
+  "translated": {
+   "mattr": {
+    "n": 292,
+    "min": 0.435,
+    "max": 0.582,
+    "median": 0.52,
+    "p25": 0.504,
+    "p75": 0.534,
+    "mean": 0.519,
+    "sd": 0.023
+   },
+   "sentence_cv": {
+    "n": 292,
+    "min": 0.553,
+    "max": 1.588,
+    "median": 0.792,
+    "p25": 0.742,
+    "p75": 0.874,
+    "mean": 0.813,
+    "sd": 0.119
+   }
+  }
+ },
+ "by_stratum": {
+  "group": {
+   "english": {
+    "n": 494,
+    "curve_0.25": {
+     "n": 494,
+     "min": 7.143,
+     "max": 100.0,
+     "median": 67.35,
+     "p25": 57.143,
+     "p75": 76.383,
+     "mean": 65.983,
+     "sd": 15.121
+    },
+    "mattr": {
+     "n": 494,
+     "min": 0.441,
+     "max": 0.591,
+     "median": 0.523,
+     "p25": 0.506,
+     "p75": 0.537,
+     "mean": 0.521,
+     "sd": 0.024
+    }
+   },
+   "germanic": {
+    "n": 85,
+    "curve_0.25": {
+     "n": 85,
+     "min": 22.222,
+     "max": 100.0,
+     "median": 69.565,
+     "p25": 59.091,
+     "p75": 83.108,
+     "mean": 69.316,
+     "sd": 17.294
+    },
+    "mattr": {
+     "n": 85,
+     "min": 0.455,
+     "max": 0.565,
+     "median": 0.523,
+     "p25": 0.506,
+     "p75": 0.535,
+     "mean": 0.52,
+     "sd": 0.024
+    }
+   },
+   "romance": {
+    "n": 156,
+    "curve_0.25": {
+     "n": 156,
+     "min": 11.594,
+     "max": 100.0,
+     "median": 68.423,
+     "p25": 59.478,
+     "p75": 78.05,
+     "mean": 67.884,
+     "sd": 16.445
+    },
+    "mattr": {
+     "n": 156,
+     "min": 0.435,
+     "max": 0.582,
+     "median": 0.521,
+     "p25": 0.505,
+     "p75": 0.535,
+     "mean": 0.52,
+     "sd": 0.023
+    }
+   },
+   "slavic": {
+    "n": 51,
+    "curve_0.25": {
+     "n": 51,
+     "min": 27.273,
+     "max": 100.0,
+     "median": 59.636,
+     "p25": 48.293,
+     "p75": 69.394,
+     "mean": 59.535,
+     "sd": 15.342
+    },
+    "mattr": {
+     "n": 51,
+     "min": 0.444,
+     "max": 0.574,
+     "median": 0.51,
+     "p25": 0.501,
+     "p75": 0.523,
+     "mean": 0.511,
+     "sd": 0.023
+    }
+   }
+  },
+  "era": {
+   "1800-1849": {
+    "n": 122,
+    "curve_0.25": {
+     "n": 122,
+     "min": 22.727,
+     "max": 93.75,
+     "median": 64.694,
+     "p25": 58.016,
+     "p75": 74.395,
+     "mean": 65.323,
+     "sd": 13.615
+    },
+    "mattr": {
+     "n": 122,
+     "min": 0.465,
+     "max": 0.574,
+     "median": 0.529,
+     "p25": 0.514,
+     "p75": 0.539,
+     "mean": 0.526,
+     "sd": 0.018
+    }
+   },
+   "1850-1879": {
+    "n": 192,
+    "curve_0.25": {
+     "n": 192,
+     "min": 10.0,
+     "max": 100.0,
+     "median": 67.133,
+     "p25": 56.792,
+     "p75": 76.705,
+     "mean": 66.256,
+     "sd": 15.35
+    },
+    "mattr": {
+     "n": 192,
+     "min": 0.441,
+     "max": 0.582,
+     "median": 0.515,
+     "p25": 0.501,
+     "p75": 0.532,
+     "mean": 0.514,
+     "sd": 0.025
+    }
+   },
+   "1880-1909": {
+    "n": 241,
+    "curve_0.25": {
+     "n": 241,
+     "min": 8.0,
+     "max": 100.0,
+     "median": 68.132,
+     "p25": 57.391,
+     "p75": 76.712,
+     "mean": 66.027,
+     "sd": 15.987
+    },
+    "mattr": {
+     "n": 241,
+     "min": 0.455,
+     "max": 0.583,
+     "median": 0.52,
+     "p25": 0.505,
+     "p75": 0.535,
+     "mean": 0.52,
+     "sd": 0.022
+    }
+   },
+   "1910-": {
+    "n": 168,
+    "curve_0.25": {
+     "n": 168,
+     "min": 16.832,
+     "max": 100.0,
+     "median": 66.667,
+     "p25": 58.849,
+     "p75": 77.422,
+     "mean": 67.156,
+     "sd": 16.049
+    },
+    "mattr": {
+     "n": 168,
+     "min": 0.467,
+     "max": 0.591,
+     "median": 0.525,
+     "p25": 0.507,
+     "p75": 0.539,
+     "mean": 0.524,
+     "sd": 0.024
+    }
+   },
+   "pre-1800": {
+    "n": 63,
+    "curve_0.25": {
+     "n": 63,
+     "min": 7.143,
+     "max": 100.0,
+     "median": 69.231,
+     "p25": 57.846,
+     "p75": 81.191,
+     "mean": 67.116,
+     "sd": 19.259
+    },
+    "mattr": {
+     "n": 63,
+     "min": 0.435,
+     "max": 0.563,
+     "median": 0.515,
+     "p25": 0.497,
+     "p75": 0.528,
+     "mean": 0.512,
+     "sd": 0.026
+    }
+   }
+  },
+  "genre": {
+   "adventure": {
+    "n": 120,
+    "curve_0.25": {
+     "n": 120,
+     "min": 10.0,
+     "max": 100.0,
+     "median": 64.706,
+     "p25": 54.773,
+     "p75": 74.616,
+     "mean": 64.312,
+     "sd": 16.004
+    },
+    "mattr": {
+     "n": 120,
+     "min": 0.461,
+     "max": 0.578,
+     "median": 0.524,
+     "p25": 0.506,
+     "p75": 0.533,
+     "mean": 0.52,
+     "sd": 0.022
+    }
+   },
+   "general": {
+    "n": 290,
+    "curve_0.25": {
+     "n": 290,
+     "min": 11.594,
+     "max": 100.0,
+     "median": 67.511,
+     "p25": 56.879,
+     "p75": 78.378,
+     "mean": 66.752,
+     "sd": 17.169
+    },
+    "mattr": {
+     "n": 290,
+     "min": 0.443,
+     "max": 0.589,
+     "median": 0.522,
+     "p25": 0.507,
+     "p75": 0.538,
+     "mean": 0.522,
+     "sd": 0.025
+    }
+   },
+   "historical": {
+    "n": 99,
+    "curve_0.25": {
+     "n": 99,
+     "min": 16.832,
+     "max": 100.0,
+     "median": 65.254,
+     "p25": 57.948,
+     "p75": 74.856,
+     "mean": 66.044,
+     "sd": 13.116
+    },
+    "mattr": {
+     "n": 99,
+     "min": 0.467,
+     "max": 0.591,
+     "median": 0.519,
+     "p25": 0.502,
+     "p75": 0.538,
+     "mean": 0.52,
+     "sd": 0.024
+    }
+   },
+   "mystery": {
+    "n": 90,
+    "curve_0.25": {
+     "n": 90,
+     "min": 27.451,
+     "max": 94.872,
+     "median": 67.069,
+     "p25": 59.531,
+     "p75": 76.686,
+     "mean": 66.301,
+     "sd": 13.295
+    },
+    "mattr": {
+     "n": 90,
+     "min": 0.467,
+     "max": 0.583,
+     "median": 0.514,
+     "p25": 0.502,
+     "p75": 0.529,
+     "mean": 0.514,
+     "sd": 0.02
+    }
+   },
+   "romance": {
+    "n": 112,
+    "curve_0.25": {
+     "n": 112,
+     "min": 32.727,
+     "max": 100.0,
+     "median": 70.788,
+     "p25": 60.663,
+     "p75": 76.923,
+     "mean": 69.24,
+     "sd": 12.91
+    },
+    "mattr": {
+     "n": 112,
+     "min": 0.435,
+     "max": 0.569,
+     "median": 0.518,
+     "p25": 0.504,
+     "p75": 0.537,
+     "mean": 0.518,
+     "sd": 0.026
+    }
+   },
+   "speculative": {
+    "n": 75,
+    "curve_0.25": {
+     "n": 75,
+     "min": 7.143,
+     "max": 100.0,
+     "median": 66.279,
+     "p25": 54.952,
+     "p75": 76.777,
+     "mean": 63.706,
+     "sd": 18.855
+    },
+    "mattr": {
+     "n": 75,
+     "min": 0.46,
+     "max": 0.556,
+     "median": 0.523,
+     "p25": 0.513,
+     "p75": 0.534,
+     "mean": 0.522,
+     "sd": 0.018
+    }
+   }
+  }
+ },
+ "books": [
+  {
+   "id": 11,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 32,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 81,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 82,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 83,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 92,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 164,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 175,
+   "cell": "romance/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 177,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 306,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 352,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 357,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 366,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 395,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 467,
+   "cell": "romance/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 468,
+   "cell": "romance/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 506,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 510,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 604,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 652,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 696,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 780,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 786,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 804,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 829,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 839,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 864,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 876,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 883,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 913,
+   "cell": "slavic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 924,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 969,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 986,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 1028,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 1044,
+   "cell": "english/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 1059,
+   "cell": "english/1880-1909/historical",
+   "segmented": false
+  },
+  {
+   "id": 1069,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 1110,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 1138,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 1145,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 1184,
+   "cell": "romance/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 1200,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 1210,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 1220,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1260,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 1277,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1307,
+   "cell": "romance/1800-1849/speculative",
+   "segmented": false
+  },
+  {
+   "id": 1355,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 1399,
+   "cell": "slavic/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 1417,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 1433,
+   "cell": "romance/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 1449,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 1456,
+   "cell": "romance/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 1460,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 1461,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 1484,
+   "cell": "romance/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 1501,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 1502,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 1541,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 1554,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1556,
+   "cell": "romance/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 1565,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 1569,
+   "cell": "romance/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 1608,
+   "cell": "romance/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 1625,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 1641,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 1651,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 1678,
+   "cell": "romance/1800-1849/mystery",
+   "segmented": true
+  },
+  {
+   "id": 1685,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 1709,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 1710,
+   "cell": "romance/1800-1849/speculative",
+   "segmented": false
+  },
+  {
+   "id": 1740,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 1782,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 1811,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1813,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1833,
+   "cell": "germanic/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 1834,
+   "cell": "germanic/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 1835,
+   "cell": "germanic/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 1836,
+   "cell": "germanic/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 1841,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1845,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 1871,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 1925,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 1944,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 1950,
+   "cell": "romance/1800-1849/romance",
+   "segmented": false
+  },
+  {
+   "id": 1951,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 1954,
+   "cell": "romance/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 1963,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 1966,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 1986,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 2026,
+   "cell": "germanic/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 2068,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 2097,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 2123,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 2127,
+   "cell": "romance/pre-1800/romance",
+   "segmented": false
+  },
+  {
+   "id": 2142,
+   "cell": "slavic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 2148,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 2149,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 2150,
+   "cell": "english/1800-1849/speculative",
+   "segmented": false
+  },
+  {
+   "id": 2182,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 2186,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2275,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2281,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2365,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 2413,
+   "cell": "romance/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 2451,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 2470,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 2511,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 2520,
+   "cell": "english/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 2549,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 2554,
+   "cell": "slavic/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 2574,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2600,
+   "cell": "slavic/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 2601,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 2609,
+   "cell": "romance/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2636,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 2638,
+   "cell": "slavic/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 2681,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 2708,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 2710,
+   "cell": "romance/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2722,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 2759,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 2776,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 2782,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 2791,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 2793,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 2798,
+   "cell": "english/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 2825,
+   "cell": "germanic/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 2868,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 2885,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 3336,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 3340,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 3346,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 3350,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 3451,
+   "cell": "germanic/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 3460,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3472,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 3646,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 3710,
+   "cell": "english/1850-1879/romance",
+   "segmented": false
+  },
+  {
+   "id": 3714,
+   "cell": "germanic/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 3728,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 3803,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 3836,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 3919,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 3931,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3932,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3938,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3939,
+   "cell": "romance/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 3940,
+   "cell": "romance/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 3942,
+   "cell": "romance/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 3954,
+   "cell": "romance/1850-1879/romance",
+   "segmented": false
+  },
+  {
+   "id": 3956,
+   "cell": "romance/1850-1879/romance",
+   "segmented": false
+  },
+  {
+   "id": 3959,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 3961,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 3986,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3989,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 3991,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 3994,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 4033,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 4048,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 4085,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 4097,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 4296,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 4298,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 4313,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 4344,
+   "cell": "slavic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 4380,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 4383,
+   "cell": "romance/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 4488,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 4490,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 4581,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 4594,
+   "cell": "english/1800-1849/romance",
+   "segmented": false
+  },
+  {
+   "id": 4600,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 4612,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 4633,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 4646,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 4674,
+   "cell": "english/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 4706,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 4787,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 4918,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 4947,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 5076,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 5112,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 5122,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 5165,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 5179,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 5335,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 5380,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 5444,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5446,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5463,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5501,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5505,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5513,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 5518,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5523,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5532,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 5539,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 5552,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5568,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5570,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 5578,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5588,
+   "cell": "germanic/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 5600,
+   "cell": "germanic/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 5721,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5744,
+   "cell": "romance/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 5777,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 5779,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 5807,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 5819,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 5826,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 5873,
+   "cell": "romance/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 5898,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 5906,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 5910,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 5914,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 5921,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 5932,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 5937,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 5938,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 5942,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 5945,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 5986,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 6050,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 6065,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 6087,
+   "cell": "english/1800-1849/speculative",
+   "segmented": false
+  },
+  {
+   "id": 6095,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 6097,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 6133,
+   "cell": "romance/1880-1909/adventure",
+   "segmented": false
+  },
+  {
+   "id": 6157,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 6191,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 6331,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 6346,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 6404,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 6406,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 6454,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 6457,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 6650,
+   "cell": "germanic/1850-1879/romance",
+   "segmented": false
+  },
+  {
+   "id": 6688,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 6694,
+   "cell": "germanic/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 6758,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 6761,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 6781,
+   "cell": "germanic/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 6783,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 6790,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 6791,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 6792,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 6848,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 6872,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 6899,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 6902,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 6942,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 6943,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 6944,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 6953,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 6993,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 7037,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 7052,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 7079,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7114,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 7120,
+   "cell": "slavic/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 7146,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 7178,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 7191,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 7196,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7230,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 7246,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 7307,
+   "cell": "slavic/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 7346,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7363,
+   "cell": "germanic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 7371,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 7378,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 7414,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 7469,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 7480,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 7513,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7592,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7606,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7614,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7615,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7617,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7618,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7621,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7632,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7654,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7657,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7663,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7666,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7684,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7685,
+   "cell": "english/1800-1849/mystery",
+   "segmented": false
+  },
+  {
+   "id": 7687,
+   "cell": "english/1800-1849/mystery",
+   "segmented": false
+  },
+  {
+   "id": 7689,
+   "cell": "english/1800-1849/mystery",
+   "segmented": true
+  },
+  {
+   "id": 7691,
+   "cell": "english/1800-1849/mystery",
+   "segmented": true
+  },
+  {
+   "id": 7692,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7695,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7703,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 7712,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 7714,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 7718,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7755,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7756,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7795,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 7849,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 7896,
+   "cell": "romance/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 7927,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 7956,
+   "cell": "germanic/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 8118,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 8148,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 8155,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 8168,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 8170,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 8223,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 8437,
+   "cell": "germanic/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 8440,
+   "cell": "germanic/1910-/historical",
+   "segmented": false
+  },
+  {
+   "id": 8446,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 8478,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 8511,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 8513,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 8531,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 8558,
+   "cell": "romance/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 8573,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 8600,
+   "cell": "romance/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 8602,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 8644,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 8694,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 8935,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 9150,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 9207,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 9212,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 9229,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 9230,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 9236,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 9242,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 9244,
+   "cell": "english/1800-1849/historical",
+   "segmented": false
+  },
+  {
+   "id": 9310,
+   "cell": "germanic/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 9312,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 9455,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 9509,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 9609,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 9768,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 9779,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 9798,
+   "cell": "english/pre-1800/mystery",
+   "segmented": true
+  },
+  {
+   "id": 9807,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 9817,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 9826,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 9845,
+   "cell": "english/1800-1849/mystery",
+   "segmented": true
+  },
+  {
+   "id": 9908,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 9909,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 9959,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 10046,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 10049,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 10148,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 10318,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 10374,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 10418,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 10462,
+   "cell": "english/pre-1800/mystery",
+   "segmented": true
+  },
+  {
+   "id": 10511,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 10718,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 10727,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 10859,
+   "cell": "romance/pre-1800/romance",
+   "segmented": false
+  },
+  {
+   "id": 10876,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 11153,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 11165,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 11252,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 11263,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 11409,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 11413,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 11520,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 11656,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 11699,
+   "cell": "english/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 11703,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 11913,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 12143,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 12180,
+   "cell": "english/pre-1800/mystery",
+   "segmented": true
+  },
+  {
+   "id": 12190,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 12195,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 12398,
+   "cell": "english/pre-1800/mystery",
+   "segmented": true
+  },
+  {
+   "id": 12560,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 12678,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 12697,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 12750,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 12904,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 12971,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 13058,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 13073,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 13191,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 13201,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 13354,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 13416,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 13419,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 13508,
+   "cell": "germanic/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 13511,
+   "cell": "slavic/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 13878,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 13967,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 14098,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 14219,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 14301,
+   "cell": "romance/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 14362,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 14851,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 15274,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 15426,
+   "cell": "germanic/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 15438,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 15502,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 15532,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 15766,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 15868,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 15900,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 16006,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 16015,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 16095,
+   "cell": "germanic/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 16258,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 16339,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 16344,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 16422,
+   "cell": "germanic/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 16457,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 16541,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 16853,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 17012,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 17176,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 17249,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 17352,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 17701,
+   "cell": "romance/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 18002,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 18182,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 18361,
+   "cell": "english/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 18492,
+   "cell": "english/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 18508,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 18529,
+   "cell": "english/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 18572,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 18645,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 18668,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 18886,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 18949,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 18960,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 18965,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 18997,
+   "cell": "romance/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 19498,
+   "cell": "germanic/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 19500,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 19672,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 19754,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 19977,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 20121,
+   "cell": "english/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 20219,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 20355,
+   "cell": "english/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 20569,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 20746,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 20911,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 21109,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 21116,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 21206,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 21327,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 21470,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 21489,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 21513,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 21571,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 21576,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 21655,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 21737,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 21808,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 21986,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 22152,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 22249,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 22278,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 22334,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 22462,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 22522,
+   "cell": "romance/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 22530,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 22583,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 22585,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 22662,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 22664,
+   "cell": "germanic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 22839,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 22942,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 23058,
+   "cell": "slavic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 23062,
+   "cell": "germanic/1800-1849/romance",
+   "segmented": false
+  },
+  {
+   "id": 23220,
+   "cell": "germanic/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 23301,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 23366,
+   "cell": "english/1910-/romance",
+   "segmented": false
+  },
+  {
+   "id": 23489,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 23695,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 23993,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 24010,
+   "cell": "romance/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 24103,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 24446,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 24954,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 24986,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 25105,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 25404,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 25684,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 25691,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 25760,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 25803,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 25923,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 26050,
+   "cell": "english/pre-1800/speculative",
+   "segmented": false
+  },
+  {
+   "id": 26135,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 26216,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 26360,
+   "cell": "germanic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 26563,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 26673,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 26835,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 26987,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 27492,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 27575,
+   "cell": "romance/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 27594,
+   "cell": "romance/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 27609,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 27681,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 27744,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 27789,
+   "cell": "romance/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 27794,
+   "cell": "romance/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 27805,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 27860,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 27884,
+   "cell": "germanic/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 27909,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 28008,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 28040,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 28161,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 28271,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 28309,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 28400,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 28462,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 28515,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 28873,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 28898,
+   "cell": "germanic/1850-1879/historical",
+   "segmented": false
+  },
+  {
+   "id": 29168,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 29202,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 29230,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 29413,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 29498,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 29849,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 29964,
+   "cell": "english/pre-1800/mystery",
+   "segmented": false
+  },
+  {
+   "id": 29994,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 30075,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 30123,
+   "cell": "romance/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 30247,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 30278,
+   "cell": "romance/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 30313,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 30365,
+   "cell": "slavic/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 30417,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 30505,
+   "cell": "english/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 30586,
+   "cell": "romance/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 30664,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 30679,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 30723,
+   "cell": "slavic/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 30724,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 30807,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 30811,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 30835,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 30925,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 30939,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 31308,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 31320,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 31377,
+   "cell": "germanic/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 31439,
+   "cell": "germanic/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 31493,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 31542,
+   "cell": "romance/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 31662,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 31738,
+   "cell": "germanic/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 31739,
+   "cell": "germanic/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 31776,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 31912,
+   "cell": "germanic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 31922,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 32223,
+   "cell": "germanic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 32311,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 32361,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 32425,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 32560,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 32610,
+   "cell": "germanic/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 32665,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 32737,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 32882,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 33163,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 33301,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 33487,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 33609,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 33657,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 33779,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 33800,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 33858,
+   "cell": "germanic/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 33878,
+   "cell": "germanic/1850-1879/speculative",
+   "segmented": false
+  },
+  {
+   "id": 33886,
+   "cell": "germanic/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 33901,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 33916,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 34050,
+   "cell": "slavic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 34136,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 34243,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 34305,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 34419,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 34505,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 34531,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 34627,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 34650,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 34664,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 34748,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 34795,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 34797,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 34817,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 34828,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 34935,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 34939,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 34957,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 34970,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 34986,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 35117,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 35254,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 35297,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 35393,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 35431,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 35457,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 35463,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 35469,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 35531,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 35570,
+   "cell": "english/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 35664,
+   "cell": "germanic/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 35671,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 35723,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 35851,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 36157,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 36281,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 36289,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 36290,
+   "cell": "english/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 36295,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 36601,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 36604,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 36626,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 36631,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 36648,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 36721,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 36827,
+   "cell": "germanic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 36836,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 36854,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 37005,
+   "cell": "germanic/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 37027,
+   "cell": "slavic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 37039,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 37170,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 37171,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 37198,
+   "cell": "slavic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 37218,
+   "cell": "english/pre-1800/romance",
+   "segmented": true
+  },
+  {
+   "id": 37308,
+   "cell": "slavic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 37336,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 37360,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 37361,
+   "cell": "slavic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 37400,
+   "cell": "romance/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 37419,
+   "cell": "germanic/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 37437,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 37438,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 37440,
+   "cell": "english/pre-1800/historical",
+   "segmented": true
+  },
+  {
+   "id": 37482,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 37490,
+   "cell": "english/1910-/mystery",
+   "segmented": false
+  },
+  {
+   "id": 37497,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 37536,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 37913,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 37979,
+   "cell": "romance/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 38001,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 38005,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 38027,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 38085,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 38347,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 38458,
+   "cell": "romance/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 38616,
+   "cell": "slavic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 38710,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 38861,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 39166,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 39452,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 39872,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 40038,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 40133,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 40140,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 40168,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 40203,
+   "cell": "romance/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 40347,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 40480,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 40491,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 40545,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 40813,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 40835,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 40848,
+   "cell": "english/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 41130,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 41180,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 41187,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 41201,
+   "cell": "slavic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 41235,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 41355,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 41414,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 41574,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 41658,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 41740,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 41803,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 41908,
+   "cell": "romance/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 41941,
+   "cell": "romance/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 41990,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 42057,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 42085,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 42117,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 42401,
+   "cell": "romance/1800-1849/speculative",
+   "segmented": false
+  },
+  {
+   "id": 42665,
+   "cell": "slavic/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 42757,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 42834,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 43133,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 43135,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 43168,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 43473,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 43835,
+   "cell": "romance/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 43862,
+   "cell": "english/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 43925,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 44083,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 44534,
+   "cell": "english/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 44559,
+   "cell": "slavic/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 44573,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 44590,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 44659,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 44900,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 45402,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 45512,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 45822,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 46006,
+   "cell": "germanic/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 46276,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 46304,
+   "cell": "english/1800-1849/adventure",
+   "segmented": true
+  },
+  {
+   "id": 46403,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 46547,
+   "cell": "romance/pre-1800/speculative",
+   "segmented": true
+  },
+  {
+   "id": 46597,
+   "cell": "romance/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 46761,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 46769,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 46774,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 46859,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 47221,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 47237,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 47342,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 47533,
+   "cell": "germanic/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 47769,
+   "cell": "romance/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 47899,
+   "cell": "english/1910-/romance",
+   "segmented": false
+  },
+  {
+   "id": 47935,
+   "cell": "slavic/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 47958,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 48641,
+   "cell": "romance/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 48647,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 48735,
+   "cell": "romance/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 48813,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 48910,
+   "cell": "english/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 49342,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 49594,
+   "cell": "slavic/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 49595,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 49856,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 49870,
+   "cell": "romance/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 49947,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 51094,
+   "cell": "slavic/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 51107,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 51198,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 51445,
+   "cell": "english/1910-/mystery",
+   "segmented": false
+  },
+  {
+   "id": 51549,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 51665,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 51919,
+   "cell": "english/1880-1909/adventure",
+   "segmented": false
+  },
+  {
+   "id": 51947,
+   "cell": "english/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 52756,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 53193,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 53263,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 53317,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 53372,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 53486,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 53771,
+   "cell": "romance/1880-1909/adventure",
+   "segmented": false
+  },
+  {
+   "id": 53988,
+   "cell": "romance/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 53989,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 54222,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 54304,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 54404,
+   "cell": "english/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 54683,
+   "cell": "english/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 54705,
+   "cell": "romance/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 54901,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 54916,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 55140,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 55219,
+   "cell": "slavic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 55284,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 55376,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 55502,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 55646,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 55927,
+   "cell": "english/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 56013,
+   "cell": "english/1880-1909/general",
+   "segmented": false
+  },
+  {
+   "id": 56158,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 56324,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 56434,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 56626,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 56670,
+   "cell": "romance/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 56719,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 56722,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 56797,
+   "cell": "slavic/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 56799,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 56841,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 56980,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 57099,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 57297,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 57333,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 57358,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 57415,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 57496,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 57631,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 57672,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 57785,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 57847,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 57950,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 58070,
+   "cell": "slavic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 58086,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 58288,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 58406,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 58409,
+   "cell": "slavic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 58568,
+   "cell": "english/1850-1879/adventure",
+   "segmented": false
+  },
+  {
+   "id": 58620,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 58884,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 58931,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 59011,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 59112,
+   "cell": "slavic/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 59164,
+   "cell": "english/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 59438,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 59478,
+   "cell": "english/1880-1909/mystery",
+   "segmented": false
+  },
+  {
+   "id": 59507,
+   "cell": "romance/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 59647,
+   "cell": "romance/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 59759,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 59851,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 59981,
+   "cell": "slavic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 60058,
+   "cell": "romance/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 60177,
+   "cell": "slavic/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 60242,
+   "cell": "romance/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 60339,
+   "cell": "english/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 60495,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 60601,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 60725,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 60885,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 61090,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 61171,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 61284,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 61618,
+   "cell": "slavic/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 61630,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 61712,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 61716,
+   "cell": "english/1880-1909/speculative",
+   "segmented": false
+  },
+  {
+   "id": 61756,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 61781,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 61963,
+   "cell": "slavic/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 61978,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 62123,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 62219,
+   "cell": "english/1800-1849/romance",
+   "segmented": false
+  },
+  {
+   "id": 62254,
+   "cell": "english/1800-1849/historical",
+   "segmented": true
+  },
+  {
+   "id": 62351,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 62419,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 62758,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 62815,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 62824,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 62899,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 62915,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 63123,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 63385,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 63476,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 63599,
+   "cell": "germanic/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 63631,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 63657,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 63806,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 63849,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 63862,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 63886,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 63939,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 63945,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 64015,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 64039,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 64264,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 64292,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 64625,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 64701,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 64739,
+   "cell": "romance/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 64759,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 64788,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 64818,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 65343,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 65388,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 65416,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 65473,
+   "cell": "english/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 65521,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 65671,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 65709,
+   "cell": "romance/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 65914,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 66320,
+   "cell": "english/1880-1909/speculative",
+   "segmented": true
+  },
+  {
+   "id": 66325,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 66375,
+   "cell": "romance/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 66427,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 66513,
+   "cell": "romance/1800-1849/romance",
+   "segmented": true
+  },
+  {
+   "id": 66545,
+   "cell": "english/1800-1849/general",
+   "segmented": false
+  },
+  {
+   "id": 66679,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 66815,
+   "cell": "english/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 66823,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 67143,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 67338,
+   "cell": "romance/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 67801,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 67929,
+   "cell": "germanic/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 68084,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 68274,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 68507,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 68557,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 68692,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 68754,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 68789,
+   "cell": "english/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 68832,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 69055,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 69104,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 69105,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 69443,
+   "cell": "romance/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 69584,
+   "cell": "english/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 69720,
+   "cell": "english/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 69913,
+   "cell": "romance/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 69946,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 70073,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 70148,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 70277,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 70440,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 70578,
+   "cell": "romance/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 70696,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 70719,
+   "cell": "romance/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 70883,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 71050,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 71165,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 71359,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 71465,
+   "cell": "english/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 71587,
+   "cell": "romance/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 71597,
+   "cell": "english/1880-1909/romance",
+   "segmented": false
+  },
+  {
+   "id": 71671,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 71673,
+   "cell": "english/pre-1800/general",
+   "segmented": true
+  },
+  {
+   "id": 72170,
+   "cell": "english/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 72271,
+   "cell": "slavic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 72374,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 72422,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 72629,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 72849,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 72869,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 72961,
+   "cell": "germanic/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 72962,
+   "cell": "germanic/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 73040,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 73207,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 73425,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 73484,
+   "cell": "english/1910-/general",
+   "segmented": false
+  },
+  {
+   "id": 73618,
+   "cell": "english/1910-/mystery",
+   "segmented": false
+  },
+  {
+   "id": 73670,
+   "cell": "romance/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 73727,
+   "cell": "germanic/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 73750,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 73803,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 73819,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 73838,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 73860,
+   "cell": "germanic/1850-1879/speculative",
+   "segmented": true
+  },
+  {
+   "id": 74000,
+   "cell": "romance/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 74015,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 74161,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 74222,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 74640,
+   "cell": "english/1800-1849/speculative",
+   "segmented": true
+  },
+  {
+   "id": 74650,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 74860,
+   "cell": "germanic/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 75011,
+   "cell": "germanic/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 75070,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75125,
+   "cell": "english/1850-1879/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75258,
+   "cell": "romance/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75318,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75384,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75491,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 75493,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 75967,
+   "cell": "germanic/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 76072,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 76105,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 76212,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 76215,
+   "cell": "english/1880-1909/general",
+   "segmented": true
+  },
+  {
+   "id": 76268,
+   "cell": "english/1910-/adventure",
+   "segmented": true
+  },
+  {
+   "id": 76604,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 76677,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 76750,
+   "cell": "germanic/1850-1879/general",
+   "segmented": false
+  },
+  {
+   "id": 76780,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 76796,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 76885,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 76903,
+   "cell": "germanic/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 77092,
+   "cell": "english/1910-/romance",
+   "segmented": true
+  },
+  {
+   "id": 77097,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 77098,
+   "cell": "germanic/1800-1849/general",
+   "segmented": true
+  },
+  {
+   "id": 77109,
+   "cell": "germanic/pre-1800/adventure",
+   "segmented": true
+  },
+  {
+   "id": 77253,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  },
+  {
+   "id": 77324,
+   "cell": "english/1850-1879/historical",
+   "segmented": true
+  },
+  {
+   "id": 77426,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 77479,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 77582,
+   "cell": "germanic/1910-/general",
+   "segmented": true
+  },
+  {
+   "id": 77601,
+   "cell": "english/1910-/mystery",
+   "segmented": false
+  },
+  {
+   "id": 77705,
+   "cell": "germanic/1880-1909/historical",
+   "segmented": true
+  },
+  {
+   "id": 77998,
+   "cell": "english/1850-1879/general",
+   "segmented": true
+  },
+  {
+   "id": 78040,
+   "cell": "english/1850-1879/adventure",
+   "segmented": true
+  },
+  {
+   "id": 78220,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 78269,
+   "cell": "germanic/pre-1800/general",
+   "segmented": false
+  },
+  {
+   "id": 78365,
+   "cell": "english/1850-1879/romance",
+   "segmented": true
+  },
+  {
+   "id": 78602,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 78643,
+   "cell": "english/1880-1909/mystery",
+   "segmented": true
+  },
+  {
+   "id": 78715,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 78776,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 78882,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 78942,
+   "cell": "english/1910-/speculative",
+   "segmented": false
+  },
+  {
+   "id": 79040,
+   "cell": "english/1880-1909/adventure",
+   "segmented": true
+  },
+  {
+   "id": 79053,
+   "cell": "romance/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 79127,
+   "cell": "slavic/1910-/speculative",
+   "segmented": true
+  },
+  {
+   "id": 79206,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 79246,
+   "cell": "english/1910-/adventure",
+   "segmented": false
+  },
+  {
+   "id": 79265,
+   "cell": "english/1910-/mystery",
+   "segmented": false
+  },
+  {
+   "id": 79269,
+   "cell": "english/1910-/mystery",
+   "segmented": true
+  },
+  {
+   "id": 79299,
+   "cell": "english/1880-1909/romance",
+   "segmented": true
+  },
+  {
+   "id": 79449,
+   "cell": "english/1910-/historical",
+   "segmented": true
+  }
+ ]
+}

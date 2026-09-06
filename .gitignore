@@ -1,0 +1,20 @@
+# ~/.gitignore is core.excludesFile for every repository under $HOME and it
+# excludes *.sh, so without this negation a clone ships no build scripts at all
+# -- silently, with no warning at commit and no sign until CI cannot find them.
+# Unscoped on purpose: scoping it to one directory is how the next one gets
+# missed.
+!**/*.sh
+
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
+.pytest_cache/
+dist/
+
+# `make smoke` photographs every view on every run. The four screenshots the
+# README shows are curated and live in docs/images/; these are working output.
+build/
+.flatpak-builder/
+repo/
+*.egg-info/

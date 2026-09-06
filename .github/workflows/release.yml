@@ -1,0 +1,196 @@
+name: Release
+
+# Tagging is the whole trigger: `git tag v0.1.0 && git push --tags` builds the
+# package, proves it installs and uninstalls, and publishes it on a GitHub
+# Release whose body is that version's CHANGELOG section.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, without the leading v (e.g. 0.1.0)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.pick.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The tag, the package version and the changelog have to agree, or the
+      # release ships one version's files under another version's notes.
+      - id: pick
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="${{ inputs.version }}"
+          else
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          declared="$(packaging/version.sh)"
+          if [ "$version" != "$declared" ]; then
+            echo "::error::tag says $version, src/ariadne/__init__.py says $declared"
+            exit 1
+          fi
+          packaging/release-notes.sh "$version" > /dev/null
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  deb:
+    needs: version
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build the package
+        run: packaging/deb/build.sh dist
+
+      # A package that builds and cannot be installed is not a release artifact.
+      # Both halves of the Recommends decision are checked, because that
+      # decision is the claim that everything except the window works without
+      # a toolkit -- and nothing else here can test it.
+      - name: Depends alone is enough for everything but the window
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ./dist/ariadne_*_all.deb
+          ariadne --self-test
+          ariadne --corpus | grep -qi "stratified"
+          ariadne --refusals > /dev/null
+          ariadne -h > /dev/null
+          # --doctor exits non-zero here by design, so it is captured rather
+          # than piped: under pipefail a pipeline inherits that status.
+          report="$(ariadne --doctor || true)"
+          printf '%s\n' "$report"
+          printf '%s' "$report" | grep -q "cannot open here yet"
+          printf '%s' "$report" | grep -q "apt install"
+          sudo apt-get purge -y ariadne
+
+      - name: Recommends brings the toolkit, and then the window can open
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y ./dist/ariadne_*_all.deb
+          ariadne --self-test
+          ariadne --doctor | grep -q "can open here"
+          test -f /usr/share/applications/com.kingletas.Ariadne.desktop
+          test -f /usr/share/icons/hicolor/scalable/apps/com.kingletas.Ariadne.svg
+          test -f /usr/share/metainfo/com.kingletas.Ariadne.metainfo.xml
+
+      - name: Check it uninstalls cleanly
+        run: |
+          set -euo pipefail
+          sudo apt-get purge -y ariadne
+          test ! -e /usr/bin/ariadne
+          test ! -e /usr/share/applications/com.kingletas.Ariadne.desktop
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: deb
+          path: dist/*.deb
+          if-no-files-found: error
+
+  flatpak:
+    needs: version
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install flatpak-builder and the GNOME runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y flatpak flatpak-builder
+          sudo flatpak remote-add --if-not-exists flathub \
+            https://dl.flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y --noninteractive flathub \
+            org.gnome.Platform//50 org.gnome.Sdk//50
+
+      # flatpak-builder builds with the network off. Nothing here is fetched at
+      # build time and nothing is pinned, because the engine has no dependencies
+      # and the window uses the runtime's own GTK.
+      - name: Build the bundle
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          flatpak-builder --disable-rofiles-fuse --force-clean \
+            --repo=repo build data/flatpak/com.kingletas.Ariadne.yaml
+          flatpak build-bundle repo \
+            "dist/ariadne_${{ needs.version.outputs.version }}.flatpak" \
+            com.kingletas.Ariadne
+
+      - name: Check the bundle installs and works
+        run: |
+          set -euo pipefail
+          flatpak install -y --user --noninteractive \
+            "dist/ariadne_${{ needs.version.outputs.version }}.flatpak"
+          flatpak run com.kingletas.Ariadne --self-test
+          # The measured bands are data the bundle has to carry: without them
+          # --corpus answers with nothing and says why nowhere.
+          flatpak run com.kingletas.Ariadne --corpus | grep -qi stratified
+          # The runtime has GTK, so the doctor must say the window can open.
+          flatpak run com.kingletas.Ariadne --doctor | grep -q "can open here"
+          # A runner has no display, so the window cannot be opened here. What
+          # can be checked is the thing that broke it: an applications menu
+          # passes no argument, and the entry point once required one.
+          flatpak run --command=python3 com.kingletas.Ariadne -c "
+          import inspect, sys
+          sys.path.insert(0, '/app/lib/ariadne')
+          from ariadne.app.main import run
+          needs = [n for n, p in inspect.signature(run).parameters.items()
+                   if p.default is p.empty]
+          assert not needs, f'run() still requires {needs}: a menu launch raises'
+          print('the window entry point takes no arguments')"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: flatpak
+          path: dist/*.flatpak
+          if-no-files-found: error
+
+  publish:
+    needs: [version, deb, flatpak]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      # The release body is the changelog entry rather than a second account of
+      # the same release written by hand.
+      #
+      # Creating and filling in are separate cases because a tag gets moved: the
+      # artifacts built, publishing failed, somebody fixed it and re-tagged. On
+      # that path the release already exists and `gh release create` refuses,
+      # which leaves a release with no files on it and nothing saying why.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${{ needs.version.outputs.version }}"
+          packaging/release-notes.sh "$version" > notes.md
+          if gh release view "v${version}" > /dev/null 2>&1; then
+            echo "v${version} exists; replacing its files and notes"
+            gh release upload "v${version}" artifacts/* --clobber
+            gh release edit "v${version}" \
+              --title "Ariadne ${version}" \
+              --notes-file notes.md
+          else
+            gh release create "v${version}" artifacts/* \
+              --title "Ariadne ${version}" \
+              --notes-file notes.md
+          fi
+          # A release with no files is the failure this is here to notice.
+          gh release view "v${version}" --json assets \
+            --jq '.assets | map(.name) | join(" ")' | tee /dev/stderr | grep -q "\.deb"
+          gh release view "v${version}" --json assets \
+            --jq '.assets | map(.name) | join(" ")' | grep -q "\.flatpak"

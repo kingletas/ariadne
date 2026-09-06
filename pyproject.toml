@@ -1,0 +1,79 @@
+[project]
+name = "ariadne"
+dynamic = ["version"]
+description = "A reading companion that builds a book's cast as you read and never shows you past your bookmark"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Luis Tineo", email = "code@kingletas.com" }]
+requires-python = ">=3.12"
+
+# The engine reads books and builds the index with the standard library alone,
+# and `tests/test_layering.py` is what keeps that true. A front end may bring
+# whatever it needs; nothing below one may.
+dependencies = []
+
+[project.optional-dependencies]
+# GTK comes from the system, not from a wheel. `make venv` builds the
+# environment with the host bindings visible; there is nothing to pin here.
+desktop = []
+
+[project.scripts]
+ariadne = "ariadne.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# One literal, in the package. A second one here would be the version the
+# application prints disagreeing with the version the wheel carries.
+[tool.hatch.version]
+path = "src/ariadne/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ariadne"]
+
+# The measured bands ship with the code. A wheel without them answers `--corpus`
+# with nothing and says why nowhere.
+[tool.hatch.build.targets.wheel.force-include]
+"src/ariadne/data/corpus.json" = "ariadne/data/corpus.json"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "S"]
+ignore = [
+    # S101: pytest asserts are the house test style.
+    "S101",
+    # UP031: this tool is written in percent format throughout, and 153 of
+    # these are one house style rather than 153 defects. Converting them is a
+    # readable change on its own; doing it inside a refactor that is meant to
+    # move code without altering it would hide any real break in the noise.
+    "UP031",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# S314: an epub and a docx are zip archives holding XML. ElementTree does not
+# resolve external entities, so there is no XXE here, but it has no ceiling on
+# entity expansion either -- a hostile file can still cost memory. The exposure
+# is a book the reader chose to open, and closing it properly means either a
+# dependency or a parser that refuses a DTD. Neither belongs in this commit.
+"src/ariadne/ingest/epub.py" = ["S314"]
+"src/ariadne/ingest/docx.py" = ["S314"]
+# E501: the CLI header block is the documentation `-h` reprints, and the
+# refusal register quotes sources. Reflowing either changes what is printed.
+"src/ariadne/cli/main.py" = ["E501"]
+"src/ariadne/cli/refusals.py" = ["E501"]
+# E501: the page template holds the browser's own JavaScript. Wrapping a line
+# inside it changes the file the reader is sent.
+"src/ariadne/render/page.py" = ["E501"]
+# S310: the only URL this opens is the Anthropic endpoint, built from a
+# constant. Nothing from a book or a form reaches it.
+"src/ariadne/ai/*" = ["S310"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
