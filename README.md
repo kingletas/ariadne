@@ -5,7 +5,7 @@
 
 **You are three hundred pages into a long novel, somebody walks into the room, and you have no idea who they are.**
 
-Every place you could look to find out will tell you something you have not reached. A wiki article is written from the ending. A character list on a retail page names who survives to be worth naming. Searching the name finds a forum thread about what they do in the last act. So you either read on and stay lost, or you spoil the book to stop being lost — and a lot of people just put it down. That is the problem this is for.
+Every place you could look to find out will tell you something you haven't reached. A wiki article is written from the ending. A character list on a retail page names who survives to be worth naming. Searching the name finds a forum thread about what they do in the last act. So you either read on and stay lost, or you spoil the book to stop being lost — and a lot of people just put it down. That's the problem this is for.
 
 The blurb was never going to save you. Measured over 113 fiction nominees from the 2025 Goodreads Choice Awards, **a synopsis names a median of two people**; over 53 novels measured whole, a book has introduced nineteen by a tenth of the way in and finishes with sixty.
 
@@ -13,13 +13,13 @@ The blurb was never going to save you. Measured over 113 fiction nominees from t
 
 **It builds the book's cast as you read it, from your own copy, and shows you nothing past your bookmark.**
 
-Point it at a book you own. It reads the file, works out who appears in which chapter, and gives you an index with a bookmark on it. Move the bookmark to chapter 40 and you see the book as it stands at chapter 40 — who you have met, who you have not seen for a while, who tends to be in the room with whom, where the book has been. Chapter 41 does not exist in the view.
+Point it at a book you own. It reads the file, works out who appears in which chapter, and gives you an index with a bookmark on it. Move the bookmark to chapter 40 and you see the book as it stands at chapter 40 — who you have met, who you haven't seen for a while, who tends to be in the room with whom, where the book has been. Chapter 41 doesn't exist in the view.
 
-**The spoiler rule is structural, not a filter.** Every view is built from the chapters behind your position, so there is no later data sitting in the page waiting to be revealed by a bug. That property is asserted by a test that runs on every commit.
+**The spoiler rule is structural, not a filter.** Every view is built from the chapters behind your position, so there's no later data sitting in the page waiting to be revealed by a bug. That property is asserted by a test that runs on every commit.
 
 ![The cast of War and Peace as it stands at chapter 180, ranked by how much of the book each person has had](docs/images/cast.png)
 
-> **Early days.** It works on the sixteen books below and on any DRM-free epub you own. It is also convinced that Moby Dick is a place until you tell it otherwise, and nobody has read a whole book with it yet.
+> **Early days.** It works on the sixteen books below and on any DRM-free epub you own. It's also convinced that Moby Dick is a place until you tell it otherwise, and nobody has read a whole book with it yet.
 
 ## Installing it
 
@@ -45,13 +45,13 @@ Needs `org.gnome.Platform//50` and `org.gnome.Sdk//50`. It asks for your home di
 make venv && make install
 ```
 
-That puts `ariadne` on your `PATH` and a launcher entry in your applications menu. `make help` lists everything else, and `make uninstall` removes all of it.
+This puts `ariadne` on your `PATH` and a launcher entry in your applications menu. `make help` lists everything else, and `make uninstall` removes all of it.
 
 > **Pick one or the other.** `make install` puts a wrapper in `~/bin`, which on most setups comes before `/usr/bin` on `PATH` — so with both present, `ariadne` is the wrapper and the packaged binary is never reached. `which -a ariadne` settles it.
 
 **Python 3.12 or newer, and nothing else** — the engine needs only the standard library, and `tests/test_layering.py` proves it by importing every engine module with the toolkit blocked.
 
-### If the window does not open
+### If the window doesn't open
 
 The GTK parts come from your system rather than from pip, so they may not be there. Run:
 
@@ -75,7 +75,7 @@ Down the left: everyone you have met, split into people and places. A map of who
 
 ![The detail drawer, asking whether two names are one person, with the chapters that name is in below it](docs/images/drawer.png)
 
-It does not guess at any of this. Two names might be one person or they might be two, and in some books that is the plot.
+It doesn't guess at any of this. Two names might be one person or they might be two, and in some books that's the plot.
 
 ### Where the book has been
 
@@ -83,7 +83,7 @@ It does not guess at any of this. Two names might be one person or they might be
 
 One row per place, chapters running left to right, in the order the book got to them. Reading down the list is reading the journey.
 
-It is not a map of the world and will not become one. Bald Hills and Thrushcross Grange are not on any map, and there are two Ithacas. What this draws is where the book spends its time.
+It isn't a map of the world and won't become one. Bald Hills and Thrushcross Grange aren't on any map, and there are two Ithacas. What this draws is where the book spends its time.
 
 Each row starts as a guess. The guess is right about four times in five, so you keep or bin each one — Moby Dick is a whale.
 
@@ -93,7 +93,7 @@ Each row starts as a guess. The guess is right about four times in five, so you 
 
 How much of the chapter is dialogue, how many people are in it, how many names are new, and how long it runs. Move the cursor and all four move together, so you can see that chapter 140 was quiet and crowded at the same time.
 
-There is no score anywhere on it. A slow chapter might be exactly what the author wanted.
+There's no score anywhere on it. A slow chapter might be exactly what the author wanted.
 
 ## Making a page
 
@@ -110,17 +110,17 @@ ariadne <file> --inspect     # what it found, without writing anything
 ariadne <file> --about       # what you are in for, before you start
 ```
 
-## What it will not do
+## What it won't do
 
-Of 59 books tried, it handles 48. The other 11 it turns down and tells you why, usually because it cannot work out where the chapters start.
+Of 59 books tried, it handles 48. The other 11 it turns down and tells you why, usually because it can't work out where the chapters start.
 
-It also will not tell you who is speaking a line of dialogue, decide whether something was written by a machine, match a book against other authors to guess who wrote it, or give a book a score.
+It also won't tell you who is speaking a line of dialogue, decide whether something was written by a machine, match a book against other authors to guess who wrote it, or give a book a score.
 
 ```bash
 ariadne --refusals
 ```
 
-Each of those has a reason and a number behind it. Attributing dialogue, for instance, works on 6.6% of lines — which is not a rough answer, it is a wrong one nine times out of ten.
+Each of those has a reason and a number behind it. Attributing dialogue, for instance, works on 6.6% of lines — which isn't a rough answer, it's a wrong one nine times out of ten.
 
 ## Warning yourself about a chapter
 
@@ -154,6 +154,8 @@ Each layer may use the ones above it and none below. The engine is everything ab
 Neither of those is a promise in a file. `tests/test_layering.py` reads the imports, fails on a folder nobody declared, and imports the whole engine in a subprocess with GTK blocked.
 
 ## Reading further
+
+- **[From nothing to reading without being lost](docs/from-nothing.md)** — never used it. Install, point it at a book, and correct what it got wrong.
 
 | | |
 |---|---|

@@ -12,28 +12,28 @@ Linting, the layering check, the invariant, the goldens and the desktop metadata
 make smoke
 ```
 
-**A window cannot be reviewed from its source.** This drives the real reader through every view, moves the bookmark, opens the drawer, makes a ruling and undoes it, and writes a PNG of each into `build/smoke/`. It needs a display, which is why `make check` does not run it — but a change to `app/` is not done until it has.
+**A window can't be reviewed from its source.** This drives the real reader through every view, moves the bookmark, opens the drawer, makes a ruling and undoes it, and writes a PNG of each into `build/smoke/`. It needs a display, which is why `make check` doesn't run it — but a change to `app/` isn't done until it has.
 
 ## Four questions before adding anything
 
-1. **Can it be wrong in a way the reader cannot see?** If yes, it refuses instead.
-2. **Does it need book text in a front end?** Then it does not ship — the page holds names, counts and chapter numbers, and the window holds the same index in memory.
+1. **Can it be wrong in a way the reader can't see?** If yes, it refuses instead.
+2. **Does it need book text in a front end?** Then it doesn't ship — the page holds names, counts and chapter numbers, and the window holds the same index in memory.
 3. **Does it read from `first`, or around it?** Anything reaching past the reader's position is the one bug this tool exists not to have.
-4. **What is the measurement?** A band, a threshold or a claim without one is not ready.
+4. **What is the measurement?** A band, a threshold or a claim without one isn't ready.
 
 ## The layers
 
 A layer may import the ones above it and nothing below, and `tests/test_layering.py` reads the imports out of the AST to check it. **The engine — everything except the two front ends, `render` and `app`, and the `cli` above them — must import on a machine with no GUI toolkit installed**, which is what makes "standard library only" a fact rather than an intention.
 
-Adding a folder under `src/ariadne/` fails the suite until it is declared in `ALLOWED`. That is deliberate: a new layer is a decision.
+Adding a folder under `src/ariadne/` fails the suite until it's declared in `ALLOWED`. That's deliberate: a new layer is a decision.
 
 ## The baselines
 
-The books the corpus pages were built from are not in this repository, so **the pages are the baseline**. Each `tests/golden/model/<book>.json` is the model a real page was rendered from, and the renderer must still turn it back into that exact file.
+The books the corpus pages were built from aren't in this repository, so **the pages are the baseline**. Each `tests/golden/model/<book>.json` is the model a real page was rendered from, and the renderer must still turn it back into that exact file.
 
 Ingest has fixtures instead, under `tests/fixtures/ingest`, one per branch — each chapter form, both quote conventions, Gutenberg boilerplate, a table of contents, an epub, a Markdown folder, and two refusals.
 
-**`make snapshot` re-records the ingest table. Only run it after a change you meant to make, and read the diff** — it is the difference between a fix and a regression nobody noticed.
+**`make snapshot` re-records the ingest table. Only run it after a change you meant to make, and read the diff** — it's the difference between a fix and a regression nobody noticed.
 
 ## The measured bands
 
@@ -43,7 +43,7 @@ Ingest has fixtures instead, under `tests/fixtures/ingest`, one per branch — e
 make corpus STAGE=all
 ```
 
-Five stages, each resumable and each writing its own artefact, into `~/.local/share/ariadne-corpus`. `STAGE=build` re-aggregates without re-downloading anything, and writes straight to `src/ariadne/data/corpus.json` — the file the package carries. **There is no copy step, on purpose:** a copy somebody has to remember to make is one that eventually differs.
+Five stages, each resumable and each writing its own artefact, into `~/.local/share/ariadne-corpus`. `STAGE=build` re-aggregates without re-downloading anything, and writes straight to `src/ariadne/data/corpus.json` — the file the package carries. **There's no copy step, on purpose:** a copy somebody has to remember to make is one that eventually differs.
 
 `build` is reproducible. Given the same measurements it writes the same file, byte for byte, because the `measured` date comes from the measurement rather than from the day you ran it.
 
