@@ -242,21 +242,26 @@ class ReaderWindow(Adw.ApplicationWindow):
     # --- what the window says ---
 
     def _announce(self, message: str) -> None:
-        """A ruling is an ordinary act, not an alarm.
-
-        `Adw.Toast` carries the accessible announcement itself, which is what a
-        screen reader reads and the eye can ignore.
-        """
+        """A ruling is an ordinary act, not an alarm."""
         if message:
             self._say(Adw.Toast(title=message, timeout=ANNOUNCEMENT_SECONDS))
 
     def _say(self, toast) -> None:
-        """One at a time. The overlay queues, and a queue of rulings means the
-        third one is read six seconds after the reader stopped caring."""
+        """One at a time, and said out loud as well as shown.
+
+        The overlay queues, and a queue of rulings means the third one is read
+        six seconds after the reader stopped caring -- so a new toast replaces
+        the one before it.
+
+        The announcement is explicit because `Adw.Toast` carries no accessible
+        property and nothing here can prove the platform makes one. This is the
+        behaviour the bookmark's own status line had, kept rather than assumed.
+        """
         if self._toast is not None:
             self._toast.dismiss()
         self._toast = toast
         self._toasts.add_toast(toast)
+        self._toasts.announce(toast.get_title(), Gtk.AccessibleAnnouncementPriority.MEDIUM)
 
     def _tell_since(self, message: str) -> None:
         """Once, when the reader has settled, and never as a running commentary.
