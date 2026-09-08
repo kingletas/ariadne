@@ -211,6 +211,9 @@ button.suggested-action:disabled { background: @surface_muted; color: @ink_faint
 .ground-row .cast-facts { margin-left: 8px; }
 
 .saved-locally { color: @ink_faint; font-size: 0.78rem; }
+/* The one state in the header that is bad news, so it is the one that
+   carries a colour. Never for the ordinary case. */
+.saved-locally.cannot-save { color: @danger; font-weight: 700; }
 
 .summary-line { color: @ink_muted; font-size: 0.85rem; padding: 2px 24px 6px; }
 .empty-state { color: @ink_muted; padding: 48px 24px; font-size: 1rem; }

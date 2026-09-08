@@ -12,6 +12,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - The manifest is a manifest rather than a filename convention on purpose. `ch12-vael.png` breaks silently the day a chapter is inserted. Every way this one can be wrong — a missing file, a chapter outside the book, a plate listed twice, a path reaching out of the folder — is a named refusal.
 - The chapter a picture may be seen *from* is not the chapter it illustrates. A drawing of somebody at a place they have not reached is a spoiler filed under the wrong number, and only the person who drew it knows the difference.
 
+- `--inspect` now answers for the illustrations folder too, including refusing on a manifest it cannot trust. Reading the book and then refusing an hour later is two answers to one question.
+
+### Fixed
+
+- **A book Ariadne cannot write beside lost every ruling silently, and the header said it had saved them.** Found on a real book opened from a removable drive through the Flatpak file portal, which grants the one file you picked and not the directory around it. Every bookmark move wrote a temporary file whose rename failed; the error went into a signal handler that prints and carries on; the header went on saying "Saved locally" for an hour of reading. It is now asked once, up front, before anything is relied on — and the header says **Cannot save**, with the reason, and says it out loud once.
+- **A chapter mark had a floor and no ceiling.** A long book was stopped from smearing into a solid bar and a short one was not stopped from drawing slabs: Divergent's 41 chapters put a 24px block on each, so "in every chapter" read as a progress bar rather than a presence. Both ends are the axis's answer now, so the cast strips and the place bands cannot disagree about it.
+
 ### Changed
 
 - The bookmark is the chapter axis. It was a panel under the header with its own scale; it is now a strip at the top of the content column, and every chapter-indexed thing below it — cast strips, place bands, pace lines — is drawn to the same 1-to-the-book's-length scale. A line dropped through your position lands on the same chapter on all of them.

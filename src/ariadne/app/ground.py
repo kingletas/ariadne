@@ -61,7 +61,6 @@ class Band(Gtk.DrawingArea):
 
     def _draw(self, _area, cr, width, height, *_):
         palette = tokens.DARK if self._dark else tokens.LIGHT
-        step = axis.slot(width, self._length)
 
         cr.set_source_rgb(*tokens.rgb(palette["line_strong"]))
         cr.rectangle(0, height / 2 - 3, width, 6)
@@ -76,9 +75,9 @@ class Band(Gtk.DrawingArea):
         for chapter in sorted(self._chapters):
             if chapter > self._upto:
                 break
-            mark = max(2.0, step)
+            wide = axis.mark(width, self._length)
             x = axis.x_for(chapter, width, self._length)
-            cr.rectangle(x - mark / 2, height / 2 - tall / 2, mark, tall)
+            cr.rectangle(x - wide / 2, height / 2 - tall / 2, wide, tall)
             cr.fill()
 
 

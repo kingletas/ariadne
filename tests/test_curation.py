@@ -121,3 +121,61 @@ def test_a_failed_write_does_not_destroy_what_was_there(tmp_path):
     assert path.read_text(encoding="utf-8") == original
     assert load_decisions(str(path))["links"][0]["also"] == "B"
     assert not list(tmp_path.glob(".ariadne-*")), "a failed write left a temporary file"
+
+
+# --- a book somewhere that cannot be written -------------------------------
+#
+# Found on a real book: Divergent, opened from a removable drive through the
+# Flatpak file portal, which grants the one file that was picked and not the
+# directory around it. Every bookmark move wrote a temporary file whose rename
+# failed, the exception went into a GTK signal handler that prints and carries
+# on, and the header said "Saved locally" throughout. An hour of reading and
+# every ruling in it was lost, and the only trace was an orphaned temp file.
+
+
+def test_it_says_up_front_when_it_cannot_save(tmp_path):
+    """Before the reader spends an hour relying on it, not after."""
+    from ariadne.app.curation import Curation
+
+    # A path whose directory is not one. The portal case is the same shape from
+    # the process's side: a place a file cannot be created and renamed.
+    blocked = tmp_path / "not-a-directory"
+    blocked.write_text("", encoding="utf-8")
+
+    curation = Curation({"entities": [], "chapters": 3}, str(blocked / "book.ariadne.json"))
+    assert curation.trouble, "a place it cannot write reported no trouble"
+    assert curation.saves_to, "the path is still where it would save"
+
+
+def test_a_drive_pulled_out_mid_read_is_reported_rather_than_raised(tmp_path):
+    """It used to raise into a signal handler, which prints and carries on.
+
+    This is the removable-drive case literally: the book was on one, and a
+    sidecar that saved a moment ago can stop being writable without anything
+    about the application changing.
+    """
+    import shutil
+
+    from ariadne.app.curation import Curation
+
+    home = tmp_path / "drive"
+    home.mkdir()
+    book = home / "book.epub.ariadne.json"
+    curation = Curation({"entities": [], "chapters": 9}, str(book))
+    assert not curation.trouble, "a writable directory reported trouble"
+
+    curation.remember_position(2)
+    assert book.is_file(), "a writable directory did not save"
+
+    shutil.rmtree(home)
+    curation.remember_position(5)  # must not raise
+    assert curation.trouble, "a save that failed reported nothing"
+
+
+def test_a_saveable_book_says_nothing_at_all(tmp_path):
+    """The quiet path, which is the one that has to stay quiet."""
+    from ariadne.app.curation import Curation
+
+    curation = Curation({"entities": [], "chapters": 4}, str(tmp_path / "b.ariadne.json"))
+    curation.remember_position(1)
+    assert curation.trouble == ""

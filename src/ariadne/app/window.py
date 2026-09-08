@@ -70,6 +70,7 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._settling = 0
         self._said = ""
         self._toast = None
+        self._warned = False
 
         root = Adw.ToolbarView()
         root.add_css_class("reader-root")
@@ -252,7 +253,7 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._undo.set_tooltip_text(
             f"Undo: {self._curation.last_action}" if self._curation.can_undo else "Nothing to undo"
         )
-        self._saved.set_text("Saved locally" if self._curation.saves_to else "Not saved")
+        self._say_saved()
 
     # --- what the window says ---
 
@@ -332,11 +333,9 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._undo.set_sensitive(False)
         self._undo.connect("clicked", lambda _b: self._after_ruling(self._curation.undo()))
 
-        self._saved = Gtk.Label(label="Saved locally")
+        self._saved = Gtk.Label()
         self._saved.add_css_class("saved-locally")
-        self._saved.set_tooltip_text(
-            self._curation.saves_to or "Nothing to save to — opened without a book file"
-        )
+        self._say_saved()
 
         bar.pack_end(self._menu())
         bar.pack_end(self._undo)
@@ -363,6 +362,42 @@ class ReaderWindow(Adw.ApplicationWindow):
         menu.popdown()
         self._about.fill(self._model.get("about") or {})
         self._about.present(self)
+
+    def _say_saved(self) -> None:
+        """What the file actually did, never what was intended.
+
+        This label said "Saved locally" on the strength of a path existing. A
+        book opened from a removable drive through the Flatpak portal could not
+        be written to at all, and the label said it had been for an hour.
+        """
+        trouble = self._curation.trouble
+        if not self._curation.saves_to:
+            self._saved.set_text("Not saved")
+            self._saved.set_tooltip_text("Opened without a book file, so there is nowhere to save")
+        elif trouble:
+            self._saved.set_text("Cannot save")
+            self._saved.set_tooltip_text(
+                f"Nothing is being written to {self._curation.saves_to}\n\n{trouble}"
+            )
+        else:
+            self._saved.set_text("Saved locally")
+            self._saved.set_tooltip_text(self._curation.saves_to)
+        self._saved.remove_css_class("cannot-save")
+        if trouble and self._curation.saves_to:
+            self._saved.add_css_class("cannot-save")
+            self._warn_once(trouble)
+
+    def _warn_once(self, trouble: str) -> None:
+        """Said the first time and not again. A reader who has been told once
+        and gone on reading has decided; repeating it every chapter is noise."""
+        if self._warned:
+            return
+        self._warned = True
+        toast = Adw.Toast(
+            title="Your rulings are not being saved — this book is somewhere Ariadne cannot write",
+            timeout=0,
+        )
+        self._say(toast)
 
     def _title_and_author(self):
         raw = self._model.get("title", "")

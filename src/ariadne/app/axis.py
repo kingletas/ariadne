@@ -19,6 +19,15 @@ from __future__ import annotations
 # enough for the strips to matter.
 INSET = 24
 
+# How wide one chapter's mark is drawn. Both ends are needed and only one was
+# there: below the floor a long book smears into a solid bar, and above the
+# ceiling a short one draws slabs. Divergent has 41 chapters, which put a 24px
+# block on every one of them and made "in every chapter" look like a progress
+# bar rather than a presence.
+MIN_MARK = 2.0
+MAX_MARK = 10.0
+GAP = 1.0
+
 
 def slot(width: float, chapters: int) -> float:
     """How wide one chapter is on a surface `width` px across."""
@@ -34,6 +43,11 @@ def x_for(chapter: int, width: float, chapters: int) -> float:
     chapters = max(1, chapters)
     step = slot(width, chapters)
     return min(max(0, chapter), chapters - 1) * step + step / 2
+
+
+def mark(width: float, chapters: int) -> float:
+    """How wide to draw one chapter, on a surface `width` px across."""
+    return max(MIN_MARK, min(MAX_MARK, slot(width, chapters) - GAP))
 
 
 def chapter_at(x: float, width: float, chapters: int) -> int:

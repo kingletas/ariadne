@@ -14,6 +14,7 @@ comes from the reader. In some books the identity is the plot.
 from __future__ import annotations
 
 import copy
+import os
 
 from ..analysis.prose import warning_map
 from ..decisions.sidecar import apply_decisions, containment_links, load_decisions, save_decisions
@@ -34,7 +35,48 @@ class Curation:
         self._pristine = copy.deepcopy(model)
         self.decisions = load_decisions(path) if path else load_decisions("")
         self._undo: list[tuple[str, dict]] = []
+        self._trouble = self._probe()
         self.model = self._rebuild()
+
+    def _probe(self) -> str:
+        """Can the sidecar actually be written, before the reader relies on it?
+
+        Found on a real book: opened from a removable drive through the Flatpak
+        file portal, which grants the one file that was picked and not the
+        directory holding it. Every bookmark move wrote a temporary file the
+        rename could not replace, the failure went to a signal handler nobody
+        reads, and the header went on saying "Saved locally" for an hour of
+        reading that was then lost.
+
+        So it is asked once, up front, where the answer is still cheap.
+        """
+        if not self._path:
+            return ""
+        directory = os.path.dirname(os.path.abspath(self._path)) or "."
+        if not os.path.isdir(directory):
+            return f"there is no directory at {directory}"
+        # `os.access` answers about permission bits and a portal is not a
+        # permission bit. The only reliable question is whether a real file can
+        # be made and renamed the way a save does.
+        probe = os.path.join(directory, ".ariadne-probe.tmp")
+        try:
+            with open(probe, "w", encoding="utf-8") as fh:
+                fh.write("")
+            os.replace(probe, probe + "2")
+            os.unlink(probe + "2")
+        except OSError as why:
+            for leftover in (probe, probe + "2"):
+                try:
+                    os.unlink(leftover)
+                except OSError:
+                    pass
+            return f"{type(why).__name__}: {why.strerror or why}"
+        return ""
+
+    @property
+    def trouble(self) -> str:
+        """Why nothing can be saved, or empty when it can. Never a guess."""
+        return self._trouble
 
     # --- what the reader can do ---
 
@@ -180,8 +222,19 @@ class Curation:
         return message
 
     def _write(self) -> None:
-        if self._path:
+        """A save that fails is reported, not raised into a signal handler.
+
+        Raising here reached GTK, which prints a traceback and carries on -- so
+        the reader saw nothing and the header still claimed the file was saved.
+        """
+        if not self._path:
+            return
+        try:
             save_decisions(self._path, self.decisions)
+        except OSError as why:
+            self._trouble = f"{type(why).__name__}: {why.strerror or why}"
+            return
+        self._trouble = ""
 
     def _rebuild(self) -> dict:
         model = copy.deepcopy(self._pristine)
@@ -196,4 +249,5 @@ class Curation:
 
     @property
     def saves_to(self) -> str:
+        """Where it would save. Ask `trouble` whether it can."""
         return self._path or ""

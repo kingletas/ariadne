@@ -19,8 +19,6 @@ from gi.repository import Gtk  # noqa: E402
 from . import axis, tokens  # noqa: E402
 
 HEIGHT = 26
-MIN_TICK = 2.0
-GAP = 1.0
 
 
 class PresenceStrip(Gtk.DrawingArea):
@@ -59,10 +57,10 @@ class PresenceStrip(Gtk.DrawingArea):
         self._on_chapter(chapter, chapter in self._chapters)
 
     def _draw(self, _area, cr, width, height, *_):
-        step = axis.slot(width, self._length)
-        # Below one pixel per chapter the marks merge into a smear, so a long
-        # book draws a coarser strip rather than a solid bar that says nothing.
-        tick = max(MIN_TICK, step - GAP)
+        # How wide a chapter is drawn is the axis's answer, not this view's:
+        # a long book would smear into a bar and a short one into slabs, and
+        # the strips and the place bands have to agree about which.
+        tick = axis.mark(width, self._length)
 
         palette = tokens.DARK if self._dark else tokens.LIGHT
 

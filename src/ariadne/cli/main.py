@@ -41,6 +41,7 @@ from ..decisions.sidecar import (
 )
 from ..ingest.book import load
 from ..ingest.epub import epub_series
+from ..ingest.illustrations import load_plates
 from ..ingest.quotes import quote_convention
 from ..ingest.series import load_series
 from ..invariant import self_test
@@ -298,6 +299,18 @@ def main():
         print("%-12s %d (>= %d uses)" % ("entities", len(first), args.min_uses))
         top = sorted(first, key=lambda n: -sum(c.get(n, 0) for c in counts))[:10]
         print("%-12s %s" % ("commonest", ", ".join(top)))
+        # `--inspect` is the "will this open" question, so it answers for the
+        # illustrations folder too. Reading the book and refusing on the
+        # manifest an hour later is two answers to one question.
+        try:
+            plates = load_plates(args.book[0], len(chapters))
+        except Refusal as why:
+            print("%-12s %s" % ("plates", "REFUSED — %s" % why))
+        else:
+            if plates:
+                print(
+                    "%-12s %d, first at chapter %d" % ("plates", len(plates), plates[0]["from"] + 1)
+                )
         return 0
 
     presence, counts, first = build_model(chapters, args.min_uses)
