@@ -76,6 +76,73 @@ def missing() -> list[tuple[str, str, dict]]:
     return absent
 
 
+# Where a packaged Ariadne puts its launcher. A wrapper in ~/bin beside one of
+# these is the thing this looks for.
+PACKAGED = (
+    "/usr/bin/ariadne",
+    "/usr/local/bin/ariadne",
+    os.path.expanduser("~/.local/share/flatpak/exports/bin/com.kingletas.Ariadne"),
+    "/var/lib/flatpak/exports/bin/com.kingletas.Ariadne",
+    "/snap/bin/ariadne",
+)
+
+
+def installs() -> list[str]:
+    """Every Ariadne on this machine, in the order a launch would find them.
+
+    They all answer to one application id, so a running copy of any of them
+    takes the launch of any other: the window that opens is whichever was
+    already there, and nothing says so. Found the hard way -- a screenshot run
+    photographed an installed copy for an entire session and reported success.
+    """
+    found = []
+    # The entry point of the interpreter running this is not an install, it is
+    # this. Listing it made the check fire on a machine with nothing wrong.
+    #
+    # `sys.prefix` and not the realpath of `sys.executable`: a virtualenv built
+    # with --system-site-packages symlinks its python, so the realpath resolves
+    # to /usr/bin and the venv's own entry point looks like a system install.
+    mine = {os.path.join(sys.prefix, "bin"), os.path.dirname(sys.executable)}
+    for directory in (os.environ.get("PATH") or "").split(os.pathsep):
+        if not directory:
+            continue
+        candidate = os.path.join(directory, "ariadne")
+        if not (os.path.isfile(candidate) and os.access(candidate, os.X_OK)):
+            continue
+        if directory in mine or os.path.dirname(candidate) in mine:
+            continue
+        real = os.path.realpath(candidate)
+        if real not in [os.path.realpath(f) for f in found]:
+            found.append(candidate)
+    for packaged in PACKAGED:
+        if os.path.exists(packaged) and os.path.realpath(packaged) not in [
+            os.path.realpath(f) for f in found
+        ]:
+            found.append(packaged)
+    return found
+
+
+def one_install(stream) -> None:
+    """Say so when there is more than one, and stay silent when there is not.
+
+    The rule is that an app which ships an installation does not also keep a
+    wrapper in ~/bin. The wrapper is for building it; the package is the app.
+    """
+    every = installs()
+    if len(every) < 2:
+        return
+    print("", file=stream)
+    print("  ariadne is installed %d times, and they share one" % len(every), file=stream)
+    print("  application id — a running copy of any of them takes the", file=stream)
+    print("  launch of any other, and says nothing:", file=stream)
+    print("", file=stream)
+    for path in every:
+        marker = "   ← reached first" if path == every[0] else ""
+        print(("    %s%s" % (path, marker)).rstrip(), file=stream)
+    print("", file=stream)
+    print("  Keep the packaged one. A ~/bin wrapper is for building it.", file=stream)
+
+
 def where_rulings_go() -> str:
     """The store, and whether it can be written. A store nobody can find is one
     people worry about, and this is the command they run when they are worried."""
@@ -105,6 +172,7 @@ def report(stream=None) -> int:
         )
         print("", file=out)
         print(f"  rulings  {where_rulings_go()}", file=out)
+        one_install(out)
         return 0
 
     manager = package_manager()

@@ -79,6 +79,27 @@ fi
 
 echo "source stays in $here — edit there and reinstall"
 
+# An app that ships an installation does not also keep a wrapper here. They
+# answer to one application id, so a running copy of either takes the launch of
+# the other and the window that opens is whichever was already there.
+#
+# This warns rather than refuses: installing the wrapper is how you work on the
+# thing, and it is at deployment that it has to go.
+packaged=""
+for other in /usr/bin/ariadne /usr/local/bin/ariadne \
+	"$HOME/.local/share/flatpak/exports/bin/$app_id" \
+	"/var/lib/flatpak/exports/bin/$app_id"; do
+	[ -e "$other" ] && packaged="${packaged:+$packaged }$other"
+done
+if [ -n "$packaged" ]; then
+	echo
+	echo "note: ariadne is already installed as a package:"
+	for other in $packaged; do echo "        $other"; done
+	echo "      Both answer to $app_id, so a running copy of one takes the"
+	echo "      launch of the other. This wrapper is for building it — remove"
+	echo "      it with \`make uninstall\` once the package is current."
+fi
+
 if ! "$target" --doctor > /dev/null 2>&1; then
 	echo
 	echo "note: the command line is installed and works, but the desktop reader"
