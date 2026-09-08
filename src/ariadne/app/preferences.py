@@ -59,12 +59,14 @@ def write(name: str, value) -> None:
 
 
 def plumb() -> bool:
-    """Whether to draw the line down the content column from the bookmark.
+    """Whether to keep the bookmark line on screen when nothing is moving.
 
-    On by default: it is what shows that every strip below the axis is on the
-    same scale. Off for a reader who finds it crosses too much.
+    Off by default. The line is drawn while the bookmark moves either way --
+    that is when the alignment is the thing being looked at. Kept on, it
+    crosses every card all the time, which is a permanent cost for an
+    occasional benefit and the reader said so.
     """
-    return bool(read("plumb", True))
+    return bool(read("plumb", False))
 
 
 def set_plumb(on: bool) -> None:

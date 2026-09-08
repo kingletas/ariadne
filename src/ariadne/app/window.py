@@ -52,12 +52,17 @@ SINCE_SECONDS = 12
 # so dragging across two hundred chapters is one sentence rather than two
 # hundred of them.
 SETTLED_MS = 1200
-# It is what makes the shared axis legible rather than merely true, and it
-# crosses everything on the way down -- so it is a hairline rather than a rule,
-# and the reader can turn it off. At 0.38 and 2px it read as a divider through
-# the cards instead of a guide behind them.
-PLUMB_ALPHA = 0.22
+# What makes the shared axis legible rather than merely true -- and it crosses
+# everything on the way down, which is a permanent cost for an occasional
+# benefit. So it is drawn while the bookmark is moving, which is when the
+# alignment is the thing being looked at, and it goes when the reader stops.
+#
+# It was a 2px rule at 38%, always on, and read as a divider through the cards
+# rather than a guide behind them.
+PLUMB_ALPHA = 0.28
 PLUMB_WIDTH = 1
+# Long enough to see where everything lined up, short enough not to linger.
+PLUMB_LINGER_MS = 1400
 
 
 class ReaderWindow(Adw.ApplicationWindow):
@@ -77,6 +82,7 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._said = ""
         self._toast = None
         self._warned = False
+        self._moving = 0
 
         root = Adw.ToolbarView()
         root.add_css_class("reader-root")
@@ -175,7 +181,9 @@ class ReaderWindow(Adw.ApplicationWindow):
         # Only over views whose x means a chapter. The map draws associations
         # and the gallery draws pictures; a line down either is decoration
         # pretending to line up with something.
-        if self._view in ("map", "plates") or not preferences.plumb():
+        if self._view in ("map", "plates"):
+            return
+        if not (self._moving or preferences.plumb()):
             return
         palette = tokens.DARK if self._dark() else tokens.LIGHT
         span = max(1, width - 2 * axis.INSET)
@@ -394,12 +402,12 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._themes[preferences.theme()].set_active(True)
         wrap.append(row)
 
-        guide = Gtk.CheckButton(label="Line down from the bookmark")
+        guide = Gtk.CheckButton(label="Always show the bookmark line")
         guide.add_css_class("menu-check")
         guide.set_active(preferences.plumb())
         guide.set_tooltip_text(
-            "Shows that every strip below the axis is on the same scale. "
-            "Turn it off if it crosses too much."
+            "The line shows while you move the bookmark, so you can see that "
+            "every strip is on the same scale. Tick this to keep it there."
         )
         guide.connect("toggled", self._plumbed_toggle)
         wrap.append(guide)
@@ -514,8 +522,21 @@ class ReaderWindow(Adw.ApplicationWindow):
     # --- what the bookmark decides ---
 
     def _moved(self, _bookmark, index: int) -> None:
+        self._show_plumb()
         self._refresh(index)
         self._curation.remember_position(index)
+
+    def _show_plumb(self) -> None:
+        """Draw the line while the bookmark is moving, and stop when it stops."""
+        if self._moving:
+            GLib.source_remove(self._moving)
+        self._moving = GLib.timeout_add(PLUMB_LINGER_MS, self._hide_plumb)
+        self._plumb.queue_draw()
+
+    def _hide_plumb(self) -> bool:
+        self._moving = 0
+        self._plumb.queue_draw()
+        return False
 
     def _chose(self, _rail, key: str) -> None:
         self._view = key

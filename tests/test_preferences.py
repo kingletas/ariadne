@@ -67,23 +67,24 @@ def test_a_file_that_cannot_be_read_costs_the_choice_and_nothing_more(store):
     assert preferences.theme() == "dark"
 
 
-def test_the_line_down_the_column_is_on_by_default():
-    """It is what shows that every strip below the axis is on the same scale."""
-    assert preferences.plumb() is True
-
-
-def test_the_line_can_be_turned_off_and_stays_off():
-    preferences.set_plumb(False)
+def test_the_line_is_not_pinned_on_by_default():
+    """It is drawn while the bookmark moves either way. Pinned, it crosses
+    every card all the time, which is what the reader objected to."""
     assert preferences.plumb() is False
+
+
+def test_the_line_can_be_pinned_and_stays_pinned():
     preferences.set_plumb(True)
     assert preferences.plumb() is True
+    preferences.set_plumb(False)
+    assert preferences.plumb() is False
 
 
 def test_the_theme_and_the_line_do_not_overwrite_each_other():
     preferences.set_theme("dark")
-    preferences.set_plumb(False)
+    preferences.set_plumb(True)
     assert preferences.theme() == "dark"
-    assert preferences.plumb() is False
+    assert preferences.plumb() is True
 
 
 def test_a_store_that_cannot_be_written_does_not_raise(tmp_path, monkeypatch):
