@@ -139,3 +139,19 @@ def test_the_icon_carries_the_palette_the_application_uses():
     found = [colour for colour in retired if colour.lower() in icon.lower()]
     assert not found, f"the icon still uses the retired palette: {found}"
     assert tokens.LIGHT["accent"].lower() in icon.lower(), "the icon does not use the accent"
+
+
+def test_uninstalling_refreshes_the_caches_it_wrote():
+    """Removing an icon and leaving the cache that names it is worse than
+    leaving both.
+
+    A user icon directory outranks /usr/share, so a cache there claiming an
+    icon that is gone hides the packaged one and the application runs with no
+    icon at all. That happened, and everything else about it was correct --
+    the file, the theme, the desktop entry and the Wayland app id.
+    """
+    script = (ROOT / "scripts" / "uninstall").read_text(encoding="utf-8")
+    installer = (ROOT / "scripts" / "install").read_text(encoding="utf-8")
+    for cache in ("update-desktop-database", "gtk-update-icon-cache"):
+        assert cache in installer, f"the installer no longer writes {cache}"
+        assert cache in script, f"uninstall leaves {cache} stale"
