@@ -13,7 +13,7 @@ import gi  # noqa: E402
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Adw, Gdk, Gtk  # noqa: E402
+from gi.repository import Adw, Gdk, GLib, Gtk  # noqa: E402
 
 from . import preferences, tokens  # noqa: E402
 from .curation import Curation  # noqa: E402
@@ -29,6 +29,14 @@ class ReaderApplication(Adw.Application):
     """One window. A book if it was named, and a way to pick one if not."""
 
     def __init__(self, model: dict | None = None, undecided=None, sidecar: str | None = None):
+        # Wayland takes a window's app id from the program name, and GNOME
+        # matches a window to its .desktop file -- and so to its icon -- by
+        # that id. The launcher runs `python3 -c ...`, so the program name was
+        # `python3`: the shell looked for python3.desktop, found nothing, and
+        # showed a generic icon on a window that was otherwise fine.
+        #
+        # Set before `run`, because the id is read when the surface is made.
+        GLib.set_prgname(APP_ID)
         super().__init__(application_id=APP_ID)
         self._curation = None
         if model is not None:

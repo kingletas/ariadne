@@ -12,10 +12,14 @@ The rule is that an app which ships an installation does not also keep a
 wrapper in `~/bin`. The wrapper is for building it; the package is the app.
 """
 
+import ast
 import io
 import os
+from pathlib import Path
 
 from ariadne.app.availability import installs, one_install
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def only(monkeypatch, tmp_path, *names):
@@ -90,3 +94,48 @@ def test_the_interpreter_running_this_is_not_an_install(monkeypatch, tmp_path):
 
     every = installs()
     assert every == [str(packaged)], f"the running interpreter was counted: {every}"
+
+
+# --- the window has to say whose it is ---------------------------------------
+
+
+def test_the_program_name_is_set_to_the_application_id():
+    """Wayland takes a window's app id from the program name, and GNOME finds
+    a window's icon by matching that id to a .desktop file.
+
+    The launcher runs `python3 -c ...`, so the name was `python3`: the shell
+    looked for python3.desktop, found nothing, and drew a generic icon on a
+    window that was otherwise working. Read from the source rather than run,
+    because this has to be true before any window exists.
+    """
+    body = (ROOT / "src" / "ariadne" / "app" / "main.py").read_text(encoding="utf-8")
+    tree = ast.parse(body)
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)):
+            continue
+        if node.func.attr != "set_prgname":
+            continue
+        assert node.args and getattr(node.args[0], "id", None) == "APP_ID", (
+            "the program name is set to something other than the application id"
+        )
+        return
+    raise AssertionError("nothing sets the program name, so the window has no icon")
+
+
+def test_the_desktop_entry_names_the_window_class():
+    """X11 matches on WM_CLASS rather than the Wayland app id, and an entry
+    that does not say so has the same missing icon there."""
+    entry = (ROOT / "data" / "com.kingletas.Ariadne.desktop").read_text(encoding="utf-8")
+    assert "StartupWMClass=com.kingletas.Ariadne" in entry
+
+
+def test_the_icon_carries_the_palette_the_application_uses():
+    """The icon is the one drawing that lives outside `app/`, so the check that
+    swept the retired colours out of the code never looked at it."""
+    from ariadne.app import tokens
+
+    icon = (ROOT / "data" / "com.kingletas.Ariadne.svg").read_text(encoding="utf-8")
+    retired = ("#F7F3EA", "#2F6F68", "#B8832F")
+    found = [colour for colour in retired if colour.lower() in icon.lower()]
+    assert not found, f"the icon still uses the retired palette: {found}"
+    assert tokens.LIGHT["accent"].lower() in icon.lower(), "the icon does not use the accent"

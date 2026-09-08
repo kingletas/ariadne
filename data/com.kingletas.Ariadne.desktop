@@ -10,3 +10,4 @@ Categories=Office;Viewer;GNOME;GTK;
 MimeType=application/epub+zip;text/plain;text/markdown;
 Keywords=book;reading;cast;characters;spoiler;epub;bookmark;
 StartupNotify=true
+StartupWMClass=com.kingletas.Ariadne
