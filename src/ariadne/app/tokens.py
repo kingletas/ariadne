@@ -127,6 +127,19 @@ button.chip:checked {
 .position-button { padding: 0 6px; min-height: 26px; background: none; box-shadow: none; }
 .position-button:hover { background: @surface_muted; }
 .menu-popover button { padding: 4px 10px; min-height: 30px; }
+.menu-heading {
+  color: @ink_faint; font-size: 0.72rem; font-weight: 700;
+  margin: 2px 4px 0;
+}
+.appearance button {
+  min-height: 28px; padding: 2px 12px; background: @surface;
+  color: @ink_muted; border: 1px solid @line; box-shadow: none;
+  font-size: 0.88rem;
+}
+.appearance button:checked {
+  background: @accent_soft; color: @accent_dark; border-color: @accent_soft;
+  font-weight: 600;
+}
 
 /* --- cast cards --- */
 

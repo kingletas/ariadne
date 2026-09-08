@@ -15,7 +15,7 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw, Gdk, Gtk  # noqa: E402
 
-from . import tokens  # noqa: E402
+from . import preferences, tokens  # noqa: E402
 from .curation import Curation  # noqa: E402
 from .welcome import Welcome  # noqa: E402
 from .window import ReaderWindow  # noqa: E402
@@ -41,6 +41,7 @@ class ReaderApplication(Adw.Application):
         Adw.Application.do_startup(self)
         Gtk.Window.set_default_icon_name(APP_ID)
         manager = Adw.StyleManager.get_default()
+        apply_theme(preferences.theme(), manager)
         load_styles(manager)
         manager.connect("notify::dark", lambda m, _p: load_styles(m))
 
@@ -84,6 +85,23 @@ class ReaderApplication(Adw.Application):
         reader = ReaderWindow(self, self._curation)
         reader.present()
         welcome.close()
+
+
+SCHEMES = {
+    "system": "DEFAULT",
+    "light": "FORCE_LIGHT",
+    "dark": "FORCE_DARK",
+}
+
+
+def apply_theme(name: str, manager=None) -> None:
+    """Follow the system, or override it. `system` is what everything else does.
+
+    Setting the scheme moves libadwaita's `dark` property, which is what the
+    stylesheet reload already listens to -- so this needs no second path.
+    """
+    manager = manager or Adw.StyleManager.get_default()
+    manager.set_color_scheme(getattr(Adw.ColorScheme, SCHEMES.get(name, "DEFAULT")))
 
 
 def load_styles(manager=None) -> None:

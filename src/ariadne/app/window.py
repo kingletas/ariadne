@@ -27,7 +27,7 @@ from ..model.view import (  # noqa: E402
     often_with,
     ranked,
 )
-from . import axis, tokens  # noqa: E402
+from . import axis, preferences, tokens  # noqa: E402
 from .bookmark import Bookmark  # noqa: E402
 from .cast import CastView  # noqa: E402
 from .drawer import WIDTH as DRAWER_WIDTH  # noqa: E402
@@ -348,6 +348,8 @@ class ReaderWindow(Adw.ApplicationWindow):
         menu.set_tooltip_text("Menu")
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         box.add_css_class("menu-popover")
+        box.append(self._appearance())
+
         about = Gtk.Button(label="About this book…")
         about.add_css_class("flat")
         about.set_child(Gtk.Label(label="About this book…", xalign=0))
@@ -357,6 +359,53 @@ class ReaderWindow(Adw.ApplicationWindow):
         popover.set_child(box)
         menu.set_popover(popover)
         return menu
+
+    def _appearance(self) -> Gtk.Box:
+        """Follow the system, or override it. Night is when people read.
+
+        The system is the default and stays first: it is what every other
+        application on the machine does, and most people never touch this.
+        """
+        wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        label = Gtk.Label(label="Appearance", xalign=0)
+        label.add_css_class("menu-heading")
+        wrap.append(label)
+
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        row.add_css_class("linked")
+        row.add_css_class("appearance")
+        self._themes: dict[str, Gtk.ToggleButton] = {}
+        first = None
+        for key, text in (("system", "System"), ("light", "Light"), ("dark", "Dark")):
+            button = Gtk.ToggleButton(label=text, hexpand=True)
+            if first is None:
+                first = button
+            else:
+                button.set_group(first)
+            button.connect("toggled", self._themed, key)
+            row.append(button)
+            self._themes[key] = button
+        self._themes[preferences.theme()].set_active(True)
+        wrap.append(row)
+
+        line = Gtk.Separator()
+        line.set_margin_top(4)
+        wrap.append(line)
+        return wrap
+
+    def _themed(self, button: Gtk.ToggleButton, key: str) -> None:
+        if not button.get_active() or preferences.theme() == key:
+            return
+        # Imported here and not at the top: `main` builds this window, so a
+        # module-level import would close the circle.
+        from .main import apply_theme
+
+        preferences.set_theme(key)
+        apply_theme(key)
+        # The strips and bands are drawn rather than styled, so the stylesheet
+        # reloading underneath them is not enough -- they hold the palette they
+        # were last painted with until something asks them to paint again.
+        self._refresh(self._bookmark.chapter)
 
     def _show_about(self, menu: Gtk.MenuButton) -> None:
         menu.popdown()

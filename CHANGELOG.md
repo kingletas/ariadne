@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
+- **Light, dark or the system's choice, from the menu.** It followed the desktop's setting and there was no way to say otherwise; night is when people read, and a reader whose desktop is light should not have to change the desktop to read in the dark. The choice is remembered beside the book store, because a theme belongs to the person rather than to what they are reading.
 - **Illustrations, if the book has any.** A folder beside the book — `the-book.epub.illustrations/` — with a `plates.tsv` saying which chapter each picture may be seen from. Nothing is generated and nothing is inferred: Ariadne decides *when* a picture already drawn may be shown, which is the question it is built to answer. The pictures are marks on the same axis as everything else, so you can see where the book is illustrated and where it is bare, and a picture past your bookmark is not drawn. A Pictures view appears only when there is a folder to show.
 - The manifest is a manifest rather than a filename convention on purpose. `ch12-vael.png` breaks silently the day a chapter is inserted. Every way this one can be wrong — a missing file, a chapter outside the book, a plate listed twice, a path reaching out of the folder — is a named refusal.
 - The chapter a picture may be seen *from* is not the chapter it illustrates. A drawing of somebody at a place they have not reached is a spoiler filed under the wrong number, and only the person who drew it knows the difference.
@@ -24,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Fixed
 
 - **A book Ariadne cannot write beside lost every ruling silently, and the header said it had saved them.** Found on a real book opened from a removable drive through the Flatpak file portal, which grants the one file you picked and not the directory around it. Every bookmark move wrote a temporary file whose rename failed; the error went into a signal handler that prints and carries on; the header went on saying "Saved locally" for an hour of reading. It is now asked once, up front, before anything is relied on — and the header says **Cannot save**, with the reason, and says it out loud once.
+- **Changing the theme left the drawn strips in the old palette.** The stylesheet reloaded and the cast strips, place bands and pace lines kept the colours they were last painted with until something else happened to redraw them. They are repainted now — and that was true of a system theme change too, not just the new switch.
 - **A chapter mark had a floor and no ceiling.** A long book was stopped from smearing into a solid bar and a short one was not stopped from drawing slabs: Divergent's 41 chapters put a 24px block on each, so "in every chapter" read as a progress bar rather than a presence. Both ends are the axis's answer now, so the cast strips and the place bands cannot disagree about it.
 
 ### Changed
