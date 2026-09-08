@@ -58,6 +58,19 @@ def write(name: str, value) -> None:
         return
 
 
+def plumb() -> bool:
+    """Whether to draw the line down the content column from the bookmark.
+
+    On by default: it is what shows that every strip below the axis is on the
+    same scale. Off for a reader who finds it crosses too much.
+    """
+    return bool(read("plumb", True))
+
+
+def set_plumb(on: bool) -> None:
+    write("plumb", bool(on))
+
+
 def theme() -> str:
     """The reader's choice, or `system` when they have not made one."""
     chosen = read("theme", DEFAULT)

@@ -44,14 +44,20 @@ AWAY_CAP = 25
 
 # Long enough to read, short enough not to become furniture.
 ANNOUNCEMENT_SECONDS = 6
+# The one that carries an action gets longer, because reaching for a button is
+# slower than reading a line. It still goes: a notice that waits to be
+# dismissed is furniture, and it sat over three different views for an hour.
+SINCE_SECONDS = 12
 # The bookmark has to be still this long before "since your bookmark" is said,
 # so dragging across two hundred chapters is one sentence rather than two
 # hundred of them.
 SETTLED_MS = 1200
-# Removing it loses nothing functional; it is what makes the shared axis
-# legible rather than merely true.
-PLUMB_ALPHA = 0.38
-PLUMB_WIDTH = 2
+# It is what makes the shared axis legible rather than merely true, and it
+# crosses everything on the way down -- so it is a hairline rather than a rule,
+# and the reader can turn it off. At 0.38 and 2px it read as a divider through
+# the cards instead of a guide behind them.
+PLUMB_ALPHA = 0.22
+PLUMB_WIDTH = 1
 
 
 class ReaderWindow(Adw.ApplicationWindow):
@@ -169,7 +175,7 @@ class ReaderWindow(Adw.ApplicationWindow):
         # Only over views whose x means a chapter. The map draws associations
         # and the gallery draws pictures; a line down either is decoration
         # pretending to line up with something.
-        if self._view in ("map", "plates"):
+        if self._view in ("map", "plates") or not preferences.plumb():
             return
         palette = tokens.DARK if self._dark() else tokens.LIGHT
         span = max(1, width - 2 * axis.INSET)
@@ -289,7 +295,7 @@ class ReaderWindow(Adw.ApplicationWindow):
         if not message or message == self._said:
             return
         self._said = message
-        toast = Adw.Toast(title=message, timeout=0)
+        toast = Adw.Toast(title=message, timeout=SINCE_SECONDS)
         pairs = self._curation.candidates(self._bookmark.chapter)
         if pairs:
             toast.set_button_label("Rule on them")
@@ -388,10 +394,24 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._themes[preferences.theme()].set_active(True)
         wrap.append(row)
 
+        guide = Gtk.CheckButton(label="Line down from the bookmark")
+        guide.add_css_class("menu-check")
+        guide.set_active(preferences.plumb())
+        guide.set_tooltip_text(
+            "Shows that every strip below the axis is on the same scale. "
+            "Turn it off if it crosses too much."
+        )
+        guide.connect("toggled", self._plumbed_toggle)
+        wrap.append(guide)
+
         line = Gtk.Separator()
         line.set_margin_top(4)
         wrap.append(line)
         return wrap
+
+    def _plumbed_toggle(self, button: Gtk.CheckButton) -> None:
+        preferences.set_plumb(button.get_active())
+        self._plumb.queue_draw()
 
     def _themed(self, button: Gtk.ToggleButton, key: str) -> None:
         if not button.get_active() or preferences.theme() == key:

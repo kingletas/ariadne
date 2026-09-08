@@ -318,6 +318,55 @@ def test_a_name_survives_the_alphabet_it_is_written_in(tmp_path, monkeypatch):
     assert store_slug("/x/y.epub", "!!! ???") == "book"
 
 
+def markdown_book(folder, chapters=4, body="Vela walked to Harrowgate."):
+    folder.mkdir(parents=True, exist_ok=True)
+    for i in range(1, chapters + 1):
+        (folder / f"ch{i}.md").write_text(f"# Chapter {i}\n\n{body}\n", encoding="utf-8")
+    return folder
+
+
+def test_a_folder_of_markdown_is_a_book_and_can_be_keyed(tmp_path, monkeypatch):
+    """It could not be. `book_key` opened the book to hash it, and a folder is
+    not a file -- so choosing one on the welcome screen raised
+    IsADirectoryError at the file chooser, on a manuscript."""
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = markdown_book(tmp_path / "Manuscript")
+    where = sidecar_path(str(book))
+    assert where.endswith(".json")
+    assert "manuscript-" in os.path.basename(where)
+
+
+def test_a_folder_is_keyed_on_its_chapters_and_not_its_path(tmp_path, monkeypatch):
+    import shutil
+
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    first = markdown_book(tmp_path / "here" / "Manuscript")
+    moved = tmp_path / "elsewhere" / "Manuscript"
+    moved.parent.mkdir(parents=True)
+    shutil.copytree(first, moved)
+    assert sidecar_path(str(first)) == sidecar_path(str(moved))
+
+    changed = markdown_book(tmp_path / "third" / "Manuscript", body="Corin waited instead.")
+    assert sidecar_path(str(changed)) != sidecar_path(str(first))
+
+
+def test_a_folder_key_ignores_what_is_not_a_chapter(tmp_path, monkeypatch):
+    """A note beside a manuscript is not part of it, and must not change which
+    file the rulings are in."""
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = markdown_book(tmp_path / "Manuscript")
+    before = sidecar_path(str(book))
+    (book / "notes.txt").write_text("a thought", encoding="utf-8")
+    (book / "cover.png").write_bytes(b"\x89PNG")
+    assert sidecar_path(str(book)) == before
+
+
 def test_a_book_that_was_edited_is_a_different_book(tmp_path, monkeypatch):
     """Stated rather than assumed: the chapters may have moved under every
     decision already made, so the old rulings stay under the old file."""

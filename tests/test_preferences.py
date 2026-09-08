@@ -67,6 +67,25 @@ def test_a_file_that_cannot_be_read_costs_the_choice_and_nothing_more(store):
     assert preferences.theme() == "dark"
 
 
+def test_the_line_down_the_column_is_on_by_default():
+    """It is what shows that every strip below the axis is on the same scale."""
+    assert preferences.plumb() is True
+
+
+def test_the_line_can_be_turned_off_and_stays_off():
+    preferences.set_plumb(False)
+    assert preferences.plumb() is False
+    preferences.set_plumb(True)
+    assert preferences.plumb() is True
+
+
+def test_the_theme_and_the_line_do_not_overwrite_each_other():
+    preferences.set_theme("dark")
+    preferences.set_plumb(False)
+    assert preferences.theme() == "dark"
+    assert preferences.plumb() is False
+
+
 def test_a_store_that_cannot_be_written_does_not_raise(tmp_path, monkeypatch):
     """Somewhere a directory cannot be made. The window still has to open."""
     blocked = tmp_path / "not-a-directory"

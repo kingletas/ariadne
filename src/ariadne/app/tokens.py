@@ -136,6 +136,7 @@ button.chip:checked {
   color: @ink_muted; border: 1px solid @line; box-shadow: none;
   font-size: 0.88rem;
 }
+.menu-check { margin: 6px 4px 0; font-size: 0.88rem; color: @ink; }
 .appearance button:checked {
   background: @accent_soft; color: @accent_dark; border-color: @accent_soft;
   font-weight: 600;

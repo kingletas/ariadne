@@ -53,14 +53,44 @@ def store_dir():
     return os.path.join(data, "ariadne", "books")
 
 
+def chapter_files(folder):
+    """The files a folder-of-Markdown book is made of, in the order it reads.
+
+    The same rule `ingest.markdown` uses, including its `Chapters/` step down,
+    so the key is over the book rather than over whatever else is in the
+    directory. A note beside the manuscript is not part of it.
+    """
+    root = folder
+    inner = os.path.join(folder, "Chapters")
+    if os.path.isdir(inner):
+        root = inner
+    try:
+        names = sorted(n for n in os.listdir(root) if n.endswith(".md"))
+    except OSError:
+        return []
+    return [(n, os.path.join(root, n)) for n in names]
+
+
 def book_key(book_path):
     """What identifies a book: what is in it, not where it is.
 
     A hash of the whole file. Measured at 1.1ms for a 932KB epub, so the
     simple answer is also the affordable one and there is no partial-read rule
     to be wrong about.
+
+    A folder of Markdown is a book too, and opening one as a file is what this
+    used to do -- `IsADirectoryError` on the welcome screen, on a manuscript.
+    Its key is its chapter files and what is in them, so it survives being
+    moved and changes when the chapters do, like every other book here.
     """
     digest = hashlib.sha256()
+    if os.path.isdir(book_path):
+        for name, path in chapter_files(book_path):
+            digest.update(name.encode("utf-8"))
+            with open(path, "rb") as fh:
+                for block in iter(lambda: fh.read(1 << 20), b""):
+                    digest.update(block)
+        return digest.hexdigest()[:16]
     with open(book_path, "rb") as fh:
         for block in iter(lambda: fh.read(1 << 20), b""):
             digest.update(block)
