@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-import gi
+from .assets import use_bundled_fonts
+
+# Before the toolkit, because fontconfig is read once and the first thing GTK
+# does with a window is measure text in it.
+use_bundled_fonts()
+
+import gi  # noqa: E402
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")

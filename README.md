@@ -71,7 +71,9 @@ Or open Ariadne from your applications menu and pick a book.
 
 The window shows what the page shows, and here you can also correct it. When it lists Prince Andrew and Prince Andrew Bolkónski as two people, click one and tell it they are the same man. Notes, merges and warnings go into a small file next to the book, and there are fifty steps of undo.
 
-Down the left: everyone you have met, split into people and places. A map of who shares chapters with whom. Where the book has been. A pace chart. Click any name and a panel opens with everything known about them so far, and nothing after.
+Across the top is the bookmark, and it is also the chapter axis. Every strip and band below it is drawn to that same scale, so a line dropped through your position lands on the same chapter everywhere on screen. Drag it, or click any chapter on any strip. `[` and `]` step one chapter; Ctrl+G, or the position in the title bar, jumps to one you type.
+
+Down the left: the cast, where the book has been, a map of who shares chapters with whom, a pace chart, and your warnings. The cast has four cuts across the top of it — everyone, people, places, and the ones you have not seen for a while. Click any name and a panel opens with everything known about them so far, and nothing after.
 
 ![The detail drawer, asking whether two names are one person, with the chapters that name is in below it](docs/images/drawer.png)
 
@@ -92,6 +94,8 @@ Each row starts as a guess. The guess is right about four times in five, so you 
 ![Four measures of every chapter on a shared axis, with one cursor down all of them](docs/images/pace.png)
 
 How much of the chapter is dialogue, how many people are in it, how many names are new, and how long it runs. Move the cursor and all four move together, so you can see that chapter 140 was quiet and crowded at the same time.
+
+They run on the same axis as the bookmark, so the lines stop where you are and the rest of the book is empty space you can see the size of.
 
 There's no score anywhere on it. A slow chapter might be exactly what the author wanted.
 

@@ -92,7 +92,7 @@ release: ## Bump to a release: make release VERSION=0.2.0 (add DRY_RUN=1 to prev
 
 .PHONY: clean
 clean: ## Remove caches and build products; the virtualenv stays
-	@rm -rf dist build .pytest_cache .ruff_cache
+	@rm -rf dist build local.d/smoke .pytest_cache .ruff_cache
 	@find . -name __pycache__ -type d -not -path "./.venv/*" -exec rm -rf {} + 2>/dev/null || true
 	@echo "cleaned"
 

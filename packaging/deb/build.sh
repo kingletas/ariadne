@@ -34,6 +34,7 @@ mkdir -p "$stage/DEBIAN" \
 	"$stage/usr/share/applications" \
 	"$stage/usr/share/icons/hicolor/scalable/apps" \
 	"$stage/usr/share/metainfo" \
+	"$stage/usr/share/fonts/truetype/ariadne" \
 	"$stage/usr/share/doc/ariadne"
 
 cp -r "$here/src/ariadne" "$stage/usr/lib/ariadne/ariadne"
@@ -61,6 +62,14 @@ install -m 0644 "$here/data/$app_id.svg" \
 install -m 0644 "$here/data/$app_id.metainfo.xml" \
 	"$stage/usr/share/metainfo/$app_id.metainfo.xml"
 install -m 0644 "$here/LICENSE" "$stage/usr/share/doc/ariadne/copyright"
+
+# fontconfig cannot see inside /usr/lib/ariadne, so the faces are installed
+# again into a real font directory. Their OFL text goes beside them, which is
+# what the licence asks for.
+install -m 0644 "$here"/src/ariadne/app/assets/fonts/*.ttf \
+	"$stage/usr/share/fonts/truetype/ariadne/"
+install -m 0644 "$here"/src/ariadne/app/assets/fonts/*-OFL.txt \
+	"$stage/usr/share/fonts/truetype/ariadne/"
 
 # Recommends rather than Depends on the toolkit: everything except the desktop
 # reader works without it, and a person who only wants pages should not be made

@@ -10,46 +10,51 @@ same values will emit the web profile when that is written.
 """
 
 LIGHT = {
-    "paper": "#F7F3EA",
-    "surface": "#FFFDF8",
-    "surface_muted": "#EFE9DC",
-    "ink": "#282621",
-    "ink_muted": "#706B61",
-    "ink_faint": "#9A9488",
-    "line": "#DDD6C8",
-    "line_strong": "#C9C0B0",
-    "accent": "#2F6F68",
-    "accent_dark": "#245852",
-    "accent_soft": "#DCEBE7",
-    "accent_faint": "#EEF6F3",
-    "magnitude": "#B8832F",
-    "magnitude_soft": "#F4E7CC",
-    "warning": "#8A5A24",
-    "danger": "#9C4A42",
+    "paper": "#faf9f7",
+    "surface": "#ffffff",
+    "surface_muted": "#f1efeb",
+    "ink": "#1b1917",
+    "ink_muted": "#726e68",
+    "ink_faint": "#8f8a83",
+    "line": "#e4e1da",
+    "line_strong": "#d3cec4",
+    "accent": "#14684f",
+    "accent_dark": "#0d5540",
+    "accent_soft": "#e0ece7",
+    "accent_faint": "#eef4f1",
+    "magnitude": "#a07c2c",
+    "magnitude_soft": "#efe6d3",
+    "warning": "#8a5d16",
+    "danger": "#a3372a",
 }
 
 # Night is when people read. The paper warms rather than brightens, and the
 # accent lightens so it still clears 3:1 against its own ground.
+#
+# `surface_muted` is darker than `paper` in both palettes. It is the rail and
+# the foot, and a rail that lifts off the canvas at night reads as a raised
+# panel rather than as the edge of the window.
 DARK = {
-    "paper": "#1C1A17",
-    "surface": "#26231F",
-    "surface_muted": "#2F2B26",
-    "ink": "#F2EDE3",
-    "ink_muted": "#A9A296",
-    "ink_faint": "#7C766B",
-    "line": "#3A352E",
-    "line_strong": "#4C463D",
-    "accent": "#6FB3A8",
-    "accent_dark": "#8FCBC1",
-    "accent_soft": "#24413D",
-    "accent_faint": "#1F302E",
-    "magnitude": "#D6A354",
-    "magnitude_soft": "#3A2E19",
-    "warning": "#D19A50",
-    "danger": "#D0796F",
+    "paper": "#191817",
+    "surface": "#22201e",
+    "surface_muted": "#121110",
+    "ink": "#e9e5de",
+    "ink_muted": "#8e8880",
+    "ink_faint": "#6f6a63",
+    "line": "#2e2b28",
+    "line_strong": "#454039",
+    "accent": "#2e9a76",
+    "accent_dark": "#4fb694",
+    "accent_soft": "#1d2f28",
+    "accent_faint": "#15211d",
+    "magnitude": "#d0a44e",
+    "magnitude_soft": "#332a18",
+    "warning": "#d0a04a",
+    "danger": "#e0705c",
 }
 
-SERIF = '"Source Serif 4", "Noto Serif", Cambria, Georgia, serif'
+SANS = '"Manrope", "Cantarell", "Ubuntu", system-ui, sans-serif'
+SERIF = '"Literata", "Source Serif 4", "Noto Serif", Cambria, Georgia, serif'
 
 
 def rgb(value: str) -> tuple[float, float, float]:
@@ -62,11 +67,11 @@ def stylesheet(palette: dict) -> str:
     """The sheet, with every colour resolved. `@define-color` is global, so a
     theme change reloads this rather than switching a selector."""
     colours = "\n".join(f"@define-color {name} {value};" for name, value in palette.items())
-    return colours + "\n" + SHEET.replace("__SERIF__", SERIF)
+    return colours + "\n" + SHEET.replace("__SERIF__", SERIF).replace("__SANS__", SANS)
 
 
 SHEET = """
-window, .reader-root { background: @paper; color: @ink; }
+window, .reader-root { background: @paper; color: @ink; font-family: __SANS__; }
 
 .book-title, .cast-name, .section-heading { font-family: __SERIF__; }
 .book-title { font-size: 1.15rem; font-weight: 600; color: @ink; }
@@ -91,31 +96,45 @@ row.rail-item:selected {
 }
 row.rail-item:selected label { color: @accent_dark; }
 
-/* --- the bookmark --- */
+/* --- the axis, which is the bookmark --- */
 
-.bookmark { background: @surface; border-bottom: 1px solid @line; padding: 10px 24px 6px; }
-.bookmark spinbutton { background: @paper; }
-.bookmark button.flat { min-width: 28px; padding: 2px 4px; }
-.bookmark-label { color: @ink_faint; font-size: 0.7rem; font-weight: 700; }
-.chapter-title { color: @ink_muted; font-style: italic; }
-.bookmark-scale trough { min-height: 6px; background: @line; }
-.bookmark-scale highlight { background: @accent; }
-.bookmark-scale slider {
-  min-width: 18px; min-height: 18px; background: @accent;
-  border: 3px solid @surface; box-shadow: none;
+.bookmark { margin-top: 8px; margin-bottom: 0; }
+.bookmark:focus-visible { outline: 2px solid @accent; outline-offset: 4px; }
+
+/* --- the cast facets --- */
+
+button.chip {
+  border-radius: 999px; padding: 3px 14px; min-height: 26px;
+  background: @surface; color: @ink_muted; border: 1px solid @line;
+  box-shadow: none; font-size: 0.88rem;
 }
+button.chip:hover { background: @accent_faint; color: @accent_dark; }
+button.chip:checked {
+  background: @accent_soft; color: @accent_dark; border-color: @accent_soft;
+  font-weight: 600;
+}
+.facets entry { border-radius: 999px; }
+.position-button { padding: 0 6px; min-height: 26px; background: none; box-shadow: none; }
+.position-button:hover { background: @surface_muted; }
+.menu-popover button { padding: 4px 10px; min-height: 30px; }
 
 /* --- cast cards --- */
 
+/* 23 and not 24: the border is the twenty-fourth pixel, so the card's content
+   box -- and the strip that fills it -- begins exactly where the axis does.
+   `gui-smoke.py` measures the two and fails if they part. */
 .cast-card {
   background: @surface; border: 1px solid @line; border-radius: 10px;
-  padding: 14px 18px; margin: 5px 24px;
+  padding: 14px 0; margin: 5px 23px;
 }
+/* The strip is registered with the axis, so it spans the card edge to edge and
+   the writing is what carries the inset. */
+.card-text { margin-left: 18px; margin-right: 18px; }
 .cast-name { font-size: 1.05rem; font-weight: 600; color: @ink; }
 .cast-alias { color: @ink_muted; font-style: italic; font-size: 0.85rem; }
 .cast-facts { color: @ink_muted; font-size: 0.85rem; }
 .cast-with { color: @ink_muted; font-size: 0.85rem; }
-.cast-note { color: @warning; font-size: 0.85rem; font-weight: 600; }
+.cast-note { color: @ink_muted; font-size: 0.85rem; font-weight: 600; }
 .cast-kind {
   background: @surface_muted; color: @ink_muted; border-radius: 4px;
   padding: 0 6px; font-size: 0.75rem;
@@ -158,10 +177,6 @@ button.chapter-chip:hover { background: @accent_soft; color: @accent_dark; }
 .about-book, .about-book row { background: @surface; }
 .about-book { border-radius: 10px; }
 .panel-note { color: @ink_faint; }
-.since {
-  background: @accent_faint; border: 1px solid @accent_soft; border-radius: 8px;
-  margin: 8px 24px 0; padding: 10px 14px; color: @ink;
-}
 .warning-text { color: @warning; }
 .pace-readout {
   color: @ink_muted; font-size: 0.85rem; padding: 0 24px 6px;
@@ -178,20 +193,20 @@ button.suggested-action:disabled { background: @surface_muted; color: @ink_faint
 
 .welcome-title { font-family: __SERIF__; }
 
-.announcement {
-  color: @accent_dark; background: @accent_faint; border: 1px solid @accent_soft;
-  border-radius: 6px; padding: 4px 10px; margin-top: 4px; font-size: 0.85rem;
-}
-
 .ground-caption { color: @ink_faint; font-size: 0.82rem; padding: 0 24px 4px; }
-.ground-row { padding: 2px 0; }
+.ground-row { padding: 4px 0 6px; }
 .ground-row:hover { background: @surface; border-radius: 6px; }
 .ground-name { color: @ink; font-size: 0.9rem; font-family: __SERIF__; }
 .ground-row button.flat { min-width: 26px; min-height: 26px; padding: 0; }
+.ground-row .cast-facts { margin-left: 8px; }
 
 .saved-locally { color: @ink_faint; font-size: 0.78rem; }
 
 .summary-line { color: @ink_muted; font-size: 0.85rem; padding: 2px 24px 6px; }
 .empty-state { color: @ink_muted; padding: 48px 24px; font-size: 1rem; }
-listview.cast, listview.cast row { background: transparent; }
+listview.cast, listview.cast > row { background: transparent; }
+/* The list's own padding pushed every card off the axis by two pixels and down
+   the page by fifteen. The card carries its own spacing. */
+listview.cast { padding: 0; }
+listview.cast > row { padding: 0; margin: 0; min-height: 0; }
 """

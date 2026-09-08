@@ -19,8 +19,11 @@ ROOT = Path(__file__).resolve().parents[1]
 # Everything under these is source, and a clone that lacks any of it is broken.
 SHIPPED = ("src", "tests", "scripts", "packaging", "tools", "data", ".github")
 
-# Build products and caches, which are ignored on purpose.
+# Build products and caches, which are ignored on purpose. `local.d/` is the
+# estate's name for anything disposable -- smoke shots, scratch notes, working
+# images -- and it is excluded globally rather than per repository.
 DISPOSABLE = (
+    "local.d/",
     "build/",
     "dist/",
     "repo/",

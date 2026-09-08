@@ -39,6 +39,9 @@ packages = ["src/ariadne"]
 # with nothing and says why nowhere.
 [tool.hatch.build.targets.wheel.force-include]
 "src/ariadne/data/corpus.json" = "ariadne/data/corpus.json"
+# The two faces the profile is set in, with their licence. A wheel is not a
+# font path, so `app.assets.use_bundled_fonts` is what makes them resolvable.
+"src/ariadne/app/assets/fonts" = "ariadne/app/assets/fonts"
 
 [tool.ruff]
 line-length = 100

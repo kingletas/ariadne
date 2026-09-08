@@ -35,6 +35,8 @@ class CastView(Gtk.Box):
     def __init__(self):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._upto = 0
+        self._length = 1
+        self._dark = False
 
         self._summary = Gtk.Label(xalign=0)
         self._summary.add_css_class("summary-line")
@@ -49,6 +51,9 @@ class CastView(Gtk.Box):
 
         self._list = Gtk.ListView.new(selection, factory)
         self._list.add_css_class("background")
+        # The sheet has styled `listview.cast` since it was written, and nothing
+        # ever carried the class, so every rule under it was dead.
+        self._list.add_css_class("cast")
         self._list.set_vexpand(True)
 
         scroller = Gtk.ScrolledWindow()
@@ -62,8 +67,10 @@ class CastView(Gtk.Box):
         self._empty.set_visible(False)
         self.append(self._empty)
 
-    def show_entities(self, entities, upto, summary, empty_message=None):
+    def show_entities(self, entities, upto, length, summary, empty_message=None, dark=False):
         self._upto = upto
+        self._length = max(1, length)
+        self._dark = dark
         self._items.remove_all()
         for entity in entities:
             self._items.append(Entity(entity))
@@ -81,6 +88,7 @@ class CastView(Gtk.Box):
         card.add_css_class("cast-card")
 
         heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        heading.add_css_class("card-text")
         name = Gtk.Button()
         name.set_has_frame(False)
         name.add_css_class("name-button")
@@ -97,14 +105,17 @@ class CastView(Gtk.Box):
         card.append(heading)
 
         facts = Gtk.Label(xalign=0)
+        facts.add_css_class("card-text")
         facts.add_css_class("cast-facts")
         card.append(facts)
 
         note = Gtk.Label(xalign=0)
+        note.add_css_class("card-text")
         note.add_css_class("cast-note")
         card.append(note)
 
         with_whom = Gtk.Label(xalign=0, wrap=True)
+        with_whom.add_css_class("card-text")
         with_whom.add_css_class("cast-with")
         card.append(with_whom)
 
@@ -140,7 +151,7 @@ class CastView(Gtk.Box):
         with_whom.set_text(lead + ", ".join(often) if often else "")
         with_whom.set_visible(bool(often))
 
-        strip.show_entity(entity["chapters"], self._upto)
+        strip.show_entity(entity["chapters"], self._upto, self._length, self._dark)
 
         if getattr(button, "wired", None) != entity["name"]:
             if getattr(button, "handler", None):

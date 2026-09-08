@@ -45,6 +45,11 @@ modules:
         ${FLATPAK_DEST}/share/metainfo/com.kingletas.Ariadne.metainfo.xml
       - install -Dm644 data/com.kingletas.Ariadne.svg
         ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/com.kingletas.Ariadne.svg
+      # fontconfig reads /app/share/fonts and cannot see /app/lib/ariadne, so
+      # the two faces are installed again where it will find them.
+      - install -d ${FLATPAK_DEST}/share/fonts
+      - cp src/ariadne/app/assets/fonts/*.ttf ${FLATPAK_DEST}/share/fonts/
+      - cp src/ariadne/app/assets/fonts/*-OFL.txt ${FLATPAK_DEST}/share/fonts/
       - sed -i 's|@LAUNCHER@|ariadne|'
         ${FLATPAK_DEST}/share/applications/com.kingletas.Ariadne.desktop
     sources:

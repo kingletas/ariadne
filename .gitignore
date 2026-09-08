@@ -17,8 +17,14 @@ __pycache__/
 .pytest_cache/
 dist/
 
-# `make smoke` photographs every view on every run. The four screenshots the
-# README shows are curated and live in docs/images/; these are working output.
+# Disposable output, and the one place it is allowed to be. `~/.gitignore`
+# excludes `**/local.d/**` for every repository here, so nothing under it can
+# reach a commit even by accident -- which is the point of having one name for
+# it rather than a new ignore line per kind of artefact.
+local.d/
+
+# `make smoke` photographs every view on every run into local.d/smoke. The
+# screenshots the README shows are curated and live in docs/images/.
 build/
 .flatpak-builder/
 repo/

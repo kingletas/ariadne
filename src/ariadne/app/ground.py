@@ -20,9 +20,11 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import GObject, Gtk  # noqa: E402
 
 from ..model.ground import proposed, scope  # noqa: E402
-from . import tokens  # noqa: E402
+from . import axis, tokens  # noqa: E402
 
 BAND_HEIGHT = 22
+KEPT_MARK = 16
+PROPOSED_MARK = 8
 
 
 class Band(Gtk.DrawingArea):
@@ -34,6 +36,7 @@ class Band(Gtk.DrawingArea):
         self.set_hexpand(True)
         self._chapters: set[int] = set()
         self._upto = 0
+        self._length = 1
         self._kept = False
         self._dark = False
         self._on_chapter = on_chapter
@@ -42,9 +45,10 @@ class Band(Gtk.DrawingArea):
         click.connect("released", self._clicked)
         self.add_controller(click)
 
-    def show_band(self, chapters, upto, kept, dark):
+    def show_band(self, chapters, upto, length, kept, dark):
         self._chapters = set(chapters)
         self._upto = max(0, upto)
+        self._length = max(1, length)
         self._kept, self._dark = kept, dark
         first, last = min(self._chapters) + 1, max(self._chapters) + 1
         self.set_tooltip_text(f"{len(self._chapters)} chapters, {first} to {last}")
@@ -53,29 +57,28 @@ class Band(Gtk.DrawingArea):
     def _clicked(self, _gesture, n_press, x, _y):
         if n_press != 1 or self._on_chapter is None:
             return
-        span = self._upto + 1
-        width = self.get_width()
-        if width > 0 and span > 0:
-            self._on_chapter(min(span - 1, max(0, int(x / width * span))))
+        self._on_chapter(axis.chapter_at(x, self.get_width(), self._length))
 
     def _draw(self, _area, cr, width, height, *_):
-        span = self._upto + 1
-        if span <= 0:
-            return
         palette = tokens.DARK if self._dark else tokens.LIGHT
-        step = width / span
+        step = axis.slot(width, self._length)
 
-        cr.set_source_rgb(*tokens.rgb(palette["surface_muted"]))
-        cr.rectangle(0, height / 2 - 5, width, 10)
+        cr.set_source_rgb(*tokens.rgb(palette["line_strong"]))
+        cr.rectangle(0, height / 2 - 3, width, 6)
         cr.fill()
 
-        # Gold is the magnitude role; a proposal has not earned it yet.
+        # Gold is the magnitude role; a proposal has not earned it yet. Height
+        # says the same thing again, because colour may not carry a meaning on
+        # its own: a kept band is full height, a proposal is half of one.
         fill = palette["magnitude"] if self._kept else palette["ink_faint"]
+        tall = KEPT_MARK if self._kept else PROPOSED_MARK
         cr.set_source_rgb(*tokens.rgb(fill))
         for chapter in sorted(self._chapters):
             if chapter > self._upto:
                 break
-            cr.rectangle(chapter * step, height / 2 - 8, max(2.0, step), 16)
+            mark = max(2.0, step)
+            x = axis.x_for(chapter, width, self._length)
+            cr.rectangle(x - mark / 2, height / 2 - tall / 2, mark, tall)
             cr.fill()
 
 
@@ -108,7 +111,7 @@ class GroundView(Gtk.Box):
         scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.append(scroller)
 
-    def show_ground(self, model, upto, dark=False):
+    def show_ground(self, model, upto, length, dark=False):
         kept, struck = self._curation.kept_settings, self._curation.struck_settings
         candidates = [
             (name, chapters) for name, chapters in proposed(model, upto) if name not in struck
@@ -149,13 +152,13 @@ class GroundView(Gtk.Box):
 
         order = sorted(rows, key=lambda row: row[1][0])
         for name, chapters in order:
-            self._rows.append(self._row(name, chapters, upto, True, dark, ruled))
+            self._rows.append(self._row(name, chapters, upto, length, True, dark, ruled))
         if unruled:
             heading = Gtk.Label(label="STILL PROPOSED", xalign=0)
             heading.add_css_class("rail-group")
             self._rows.append(heading)
             for name, chapters in sorted(unruled, key=lambda row: row[1][0]):
-                self._rows.append(self._row(name, chapters, upto, False, dark, ruled))
+                self._rows.append(self._row(name, chapters, upto, length, False, dark, ruled))
         if not order and not unruled:
             empty = Gtk.Label(
                 label="Nowhere named often enough yet. A setting is a place a chapter "
@@ -166,23 +169,23 @@ class GroundView(Gtk.Box):
             empty.add_css_class("empty-state")
             self._rows.append(empty)
 
-    def _row(self, name, chapters, upto, kept, dark, ruled):
-        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+    def _row(self, name, chapters, upto, length, kept, dark, ruled):
+        """The name above the band, not beside it.
+
+        A name column would push the band out of the axis by its own width, and
+        a band that starts somewhere the axis does not is a second scale.
+        """
+        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         row.add_css_class("ground-row")
 
+        head = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         label = Gtk.Label(label=name, xalign=0, ellipsize=3)
         label.add_css_class("ground-name")
-        label.set_size_request(160, -1)
-        row.append(label)
+        head.append(label)
 
-        count = Gtk.Label(label=f"{len(chapters)} ch", xalign=1)
+        count = Gtk.Label(label=f"{len(chapters)} ch", xalign=0, hexpand=True)
         count.add_css_class("cast-facts")
-        count.set_size_request(44, -1)
-        row.append(count)
-
-        band = Band(on_chapter=lambda c: self.emit("go", c))
-        band.show_band(chapters, upto, kept and ruled, dark)
-        row.append(band)
+        head.append(count)
 
         if not (kept and ruled):
             yes = Gtk.Button.new_from_icon_name("object-select-symbolic")
@@ -191,12 +194,17 @@ class GroundView(Gtk.Box):
             yes.connect(
                 "clicked", lambda _b, n=name: self.emit("ruled", self._curation.keep_setting(n))
             )
-            row.append(yes)
+            head.append(yes)
         no = Gtk.Button.new_from_icon_name("window-close-symbolic")
         no.add_css_class("flat")
         no.set_tooltip_text(f"{name} is not a setting")
         no.connect(
             "clicked", lambda _b, n=name: self.emit("ruled", self._curation.strike_setting(n))
         )
-        row.append(no)
+        head.append(no)
+        row.append(head)
+
+        band = Band(on_chapter=lambda c: self.emit("go", c))
+        band.show_band(chapters, upto, length, kept and ruled, dark)
+        row.append(band)
         return row

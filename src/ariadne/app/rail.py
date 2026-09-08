@@ -1,9 +1,10 @@
-"""Grouped navigation, which replaced a row of seven flat tabs.
+"""Five views, which is how many there are.
 
-The seven were not peers. `people` and `places` are filters of `everyone` and
-`cast list` is a third cut of the same list, while `map` and `pace` are
-different objects and `away a while` is an attention view. Presenting them as
-one row said they were all the same kind of thing.
+Eight items in three groups presented `everyone`, `people`, `places` and
+`away a while` as peers of `map` and `pace`. They are not: all four render the
+same cast list with a different filter, and the window branched on exactly
+that. They are a facet of one view, so they are chips inside it, and what is
+left needs no group headings -- five peers do not.
 """
 
 from __future__ import annotations
@@ -16,10 +17,21 @@ from gi.repository import GObject, Gtk  # noqa: E402
 
 WIDTH = 220
 
-GROUPS = (
-    ("CAST", (("everyone", "Everyone"), ("people", "People"), ("places", "Places"))),
-    ("EXPLORE", (("ground", "Where you've been"), ("map", "Map"), ("pace", "Pace"))),
-    ("ATTENTION", (("away", "Away a while"), ("warnings", "Warnings"))),
+VIEWS = (
+    ("cast", "Cast"),
+    ("ground", "Where you've been"),
+    ("map", "Map"),
+    ("pace", "Pace"),
+    ("warnings", "Warnings"),
+)
+
+# The four cuts of the cast list. Order is the reader's likely reach, not
+# alphabetical: everyone first, and the attention view last.
+FACETS = (
+    ("everyone", "Everyone"),
+    ("people", "People"),
+    ("places", "Places"),
+    ("away", "Away a while"),
 )
 
 
@@ -33,38 +45,30 @@ class Rail(Gtk.Box):
         self.add_css_class("rail")
         self.set_size_request(WIDTH, -1)
         self._rows: dict[str, Gtk.ListBoxRow] = {}
-        self._boxes: list[Gtk.ListBox] = []
         self._quiet = False
 
-        for heading, entries in GROUPS:
-            label = Gtk.Label(label=heading, xalign=0)
-            label.add_css_class("rail-group")
-            self.append(label)
+        self._box = Gtk.ListBox()
+        self._box.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self._box.add_css_class("navigation-sidebar")
+        self._box.set_margin_top(8)
+        self._box.connect("row-selected", self._selected)
+        for key, text in VIEWS:
+            row = Gtk.ListBoxRow()
+            row.add_css_class("rail-item")
+            row.set_child(Gtk.Label(label=text, xalign=0))
+            row.key = key
+            self._box.append(row)
+            self._rows[key] = row
+        self.append(self._box)
 
-            box = Gtk.ListBox()
-            box.set_selection_mode(Gtk.SelectionMode.SINGLE)
-            box.add_css_class("navigation-sidebar")
-            box.connect("row-selected", self._selected)
-            for key, text in entries:
-                row = Gtk.ListBoxRow()
-                row.add_css_class("rail-item")
-                row.set_child(Gtk.Label(label=text, xalign=0))
-                row.key = key
-                box.append(row)
-                self._rows[key] = row
-            self._boxes.append(box)
-            self.append(box)
-
-        self.choose("everyone")
+        self.choose("cast")
 
     def choose(self, key: str) -> None:
         row = self._rows.get(key)
         if row is None:
             return
         self._quiet = True
-        for box in self._boxes:
-            box.unselect_all()
-        row.get_parent().select_row(row)
+        self._box.select_row(row)
         self._quiet = False
         self.emit("chose", key)
 
@@ -75,14 +79,10 @@ class Rail(Gtk.Box):
         row = self._rows.get(key)
         if row is None:
             return
-        label = row.get_child()
-        base = dict((k, t) for _, entries in GROUPS for k, t in entries)[key]
-        label.set_text(f"{base} · {count}" if count else base)
+        base = dict(VIEWS)[key]
+        row.get_child().set_text(f"{base} · {count}" if count else base)
 
-    def _selected(self, box, row):
+    def _selected(self, _box, row):
         if self._quiet or row is None:
             return
-        for other in self._boxes:
-            if other is not box:
-                other.unselect_all()
         self.emit("chose", row.key)

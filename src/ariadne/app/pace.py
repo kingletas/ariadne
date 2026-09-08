@@ -17,7 +17,7 @@ gi.require_version("Gtk", "4.0")
 
 from gi.repository import GObject, Gtk  # noqa: E402
 
-from . import tokens  # noqa: E402
+from . import axis, tokens  # noqa: E402
 
 # key, the heading above the chart, the short word in the readout, and how the
 # number is said. The short word is written rather than derived: taking the
@@ -30,8 +30,6 @@ MEASURES = (
 )
 
 ROW = 74
-PAD_LEFT = 8
-PAD_RIGHT = 8
 
 
 class PaceView(Gtk.Box):
@@ -43,6 +41,7 @@ class PaceView(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self._rows: list[dict] = []
         self._upto = 0
+        self._length = 1
         self._cursor: int | None = None
         self._dark = False
 
@@ -72,10 +71,12 @@ class PaceView(Gtk.Box):
         scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.append(scroller)
 
-    def show_pace(self, rows, upto, dark=False):
+    def show_pace(self, rows, upto, length, dark=False):
         self._rows, self._upto, self._dark = rows, upto, dark
+        self._length = max(1, length)
         self._caption.set_text(
-            f"Chapters 1 to {upto + 1}. Nothing past where you are is drawn. "
+            f"Chapters 1 to {upto + 1} of {self._length}, on the axis above. "
+            "Nothing past where you are is drawn. "
             "These are counts, not a score — a quiet chapter is a choice somebody "
             "made, and no number here can tell you whether it worked."
         )
@@ -85,9 +86,8 @@ class PaceView(Gtk.Box):
     # --- the cursor ---
 
     def _chapter_at(self, x, width):
-        span = self._upto + 1
-        usable = max(1, width - PAD_LEFT - PAD_RIGHT)
-        return min(span - 1, max(0, int((x - PAD_LEFT) / usable * span)))
+        usable = max(1, width - 2 * axis.INSET)
+        return axis.chapter_at(x - axis.INSET, usable, self._length)
 
     def _moved(self, _controller, x, _y):
         self._cursor = self._chapter_at(x, self._area.get_width())
@@ -119,14 +119,16 @@ class PaceView(Gtk.Box):
         rows = self._rows[: self._upto + 1]
         if not rows:
             return
+        # Every chapter gets a slot so the axis above governs this view too;
+        # only the read ones are plotted, and the peak is theirs alone. A peak
+        # taken over the whole book would state the loudest chapter in it.
         palette = tokens.DARK if self._dark else tokens.LIGHT
         ink = tokens.rgb(palette["ink"])
         faint = tokens.rgb(palette["ink_faint"])
         line = tokens.rgb(palette["line"])
         accent = tokens.rgb(palette["accent"])
 
-        usable = max(1, width - PAD_LEFT - PAD_RIGHT)
-        step = usable / len(rows)
+        usable = max(1, width - 2 * axis.INSET)
         band = max(ROW, (height - 16) / len(MEASURES))
         cr.select_font_face("sans")
 
@@ -138,31 +140,34 @@ class PaceView(Gtk.Box):
 
             cr.set_source_rgb(*faint)
             cr.set_font_size(11)
-            cr.move_to(PAD_LEFT, top + 12)
+            cr.move_to(axis.INSET, top + 12)
             cr.show_text(heading)
             label = f"0 to {shape.format(peak)}"
-            cr.move_to(width - PAD_RIGHT - cr.text_extents(label).width, top + 12)
+            cr.move_to(width - axis.INSET - cr.text_extents(label).width, top + 12)
             cr.show_text(label)
 
             cr.set_source_rgb(*line)
             cr.set_line_width(1)
-            cr.move_to(PAD_LEFT, plot_bottom + 0.5)
-            cr.line_to(width - PAD_RIGHT, plot_bottom + 0.5)
+            cr.move_to(axis.INSET, plot_bottom + 0.5)
+            cr.line_to(width - axis.INSET, plot_bottom + 0.5)
             cr.stroke()
 
             cr.set_source_rgb(*ink)
             cr.set_line_width(1.2)
             for i, value in enumerate(values):
-                x = PAD_LEFT + i * step + step / 2
+                x = axis.INSET + axis.x_for(i, usable, self._length)
                 y = plot_bottom - (value / peak) * (plot_bottom - plot_top)
                 cr.line_to(x, y) if i else cr.move_to(x, y)
             cr.stroke()
 
         # One crosshair down all four, which is the whole point of sharing an
         # axis: a chapter is quiet and crowded at the same time or it is not.
-        cursor = self._cursor if self._cursor is not None else self._upto
-        if 0 <= cursor < len(rows):
-            x = PAD_LEFT + cursor * step + step / 2
+        # Only while the pointer is over the chart -- the bookmark already has
+        # a line down the content column, and two of them saying one thing is
+        # one too many.
+        cursor = self._cursor
+        if cursor is not None and 0 <= cursor < len(rows):
+            x = axis.INSET + axis.x_for(cursor, usable, self._length)
             cr.set_source_rgba(*accent, 0.9)
             cr.set_line_width(1.5)
             cr.move_to(x, 4)

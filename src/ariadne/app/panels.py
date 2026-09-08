@@ -1,8 +1,9 @@
 """The three things that are not the cast: warnings, the book, and what changed.
 
-Each is folded shut. A warning that shows its own text is not a warning, and a
-panel about the whole book sitting open above the cast pushes the thing the
-reader came for below the fold.
+None of them sits in the content flow any more. A warning that shows its own
+text is not a warning; a panel about the whole book belongs behind the menu,
+not above every view including the ones it says nothing about; and a band you
+can dismiss was always a toast wearing a band's clothes.
 """
 
 from __future__ import annotations
@@ -12,7 +13,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Adw, GObject, Gtk  # noqa: E402
+from gi.repository import Adw, Gtk  # noqa: E402
 
 
 class Warnings(Gtk.Box):
@@ -72,19 +73,37 @@ class Warnings(Gtk.Box):
             self._box.append(expander)
 
 
-class AboutBook(Adw.ExpanderRow):
+class AboutBook(Adw.Dialog):
     """The one panel that is about the whole book, and it says so.
 
     Cast size, pace and narration are structure, not story, which is why this
-    can be about the whole book without spoiling it. It is shut by default
-    because everything else on the page stops at the bookmark and a permanently
-    open panel about the ending would be the odd one out.
+    can be about the whole book without spoiling it. It opens from the menu
+    rather than sitting above the cast, because everything else on screen stops
+    at the bookmark and a permanent panel about the ending was the odd one out.
     """
 
     def __init__(self):
-        super().__init__(title="About this book", subtitle="Cast size · narration · focus")
-        self.add_css_class("about-book")
+        super().__init__(title="About this book")
+        self.set_content_width(580)
+        self.set_content_height(620)
         self._filled = False
+
+        self._list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
+        self._list.add_css_class("boxed-list")
+        self._list.add_css_class("about-book")
+        self._list.set_margin_start(18)
+        self._list.set_margin_end(18)
+        self._list.set_margin_top(12)
+        self._list.set_margin_bottom(18)
+
+        scroller = Gtk.ScrolledWindow(vexpand=True)
+        scroller.set_child(self._list)
+        scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+
+        page = Adw.ToolbarView()
+        page.add_top_bar(Adw.HeaderBar())
+        page.set_content(scroller)
+        self.set_child(page)
 
     def fill(self, about: dict) -> None:
         if self._filled or not about:
@@ -153,62 +172,45 @@ class AboutBook(Adw.ExpanderRow):
         )
         note.set_title_lines(0)
         note.add_css_class("panel-note")
-        self.add_row(note)
+        self._list.append(note)
 
     def _row(self, label: str, value: str) -> None:
         row = Adw.ActionRow()
         row.set_title(label)
         row.set_subtitle(value)
         row.set_subtitle_lines(0)
-        self.add_row(row)
+        self._list.append(row)
 
 
-class SinceBookmark(Gtk.Box):
+def since_bookmark(model, mark: int, upto: int, candidates: int) -> str:
     """What changed between where the reader was and where they are.
 
-    Only ever backwards. It is dismissible and remembers that, because a panel
-    that keeps reappearing about a move you already read is noise.
+    Only ever backwards, and it returns a sentence rather than a widget: a
+    dismissible band pinned above every view was a toast in the wrong clothes,
+    and the window says it once when the reader has moved on rather than
+    keeping it on screen for the rest of the session.
     """
+    if upto <= mark:
+        return ""
+    fresh, back = [], []
+    for entity in model["entities"]:
+        if entity["first"] > upto:
+            continue
+        if entity["first"] > mark:
+            fresh.append(entity)
+        elif (
+            not [c for c in entity["chapters"] if c <= mark]
+            or max((c for c in entity["chapters"] if c <= mark), default=-1) < mark - 4
+        ) and any(mark < c <= upto for c in entity["chapters"]):
+            back.append(entity)
 
-    __gsignals__ = {"review": (GObject.SignalFlags.RUN_FIRST, None, ())}
-
-    def __init__(self):
-        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        self.add_css_class("since")
-        self.set_visible(False)
-        self._label = Gtk.Label(xalign=0, hexpand=True, wrap=True)
-        self.append(self._label)
-        dismiss = Gtk.Button(label="Dismiss")
-        dismiss.add_css_class("flat")
-        dismiss.connect("clicked", lambda _b: self.set_visible(False))
-        self.append(dismiss)
-
-    def show_change(self, model, mark: int, upto: int, candidates: int) -> None:
-        if upto <= mark:
-            self.set_visible(False)
-            return
-        fresh, back = [], []
-        for entity in model["entities"]:
-            if entity["first"] > upto:
-                continue
-            if entity["first"] > mark:
-                fresh.append(entity)
-            elif (
-                not [c for c in entity["chapters"] if c <= mark]
-                or max((c for c in entity["chapters"] if c <= mark), default=-1) < mark - 4
-            ):
-                if any(mark < c <= upto for c in entity["chapters"]):
-                    back.append(entity)
-
-        parts = []
-        if fresh:
-            parts.append(f"{len(fresh)} {'person' if len(fresh) == 1 else 'people'} appeared")
-        if back:
-            parts.append(f"{len(back)} returned")
-        if candidates:
-            parts.append(f"{candidates} possible name matches to rule on")
-        if not parts:
-            self.set_visible(False)
-            return
-        self._label.set_markup(f"<b>Since chapter {mark + 1}</b>   ·   " + "  ·  ".join(parts))
-        self.set_visible(True)
+    parts = []
+    if fresh:
+        parts.append(f"{len(fresh)} {'person' if len(fresh) == 1 else 'people'} appeared")
+    if back:
+        parts.append(f"{len(back)} returned")
+    if candidates:
+        parts.append(f"{candidates} possible name matches to rule on")
+    if not parts:
+        return ""
+    return f"Since chapter {mark + 1}: " + ", ".join(parts)
