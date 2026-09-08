@@ -22,8 +22,13 @@ VIEWS = (
     ("ground", "Where you've been"),
     ("map", "Map"),
     ("pace", "Pace"),
+    ("plates", "Pictures"),
     ("warnings", "Warnings"),
 )
+
+# A book with no illustrations folder beside it has no pictures view. An empty
+# view that explains its own emptiness is a row every reader learns to skip.
+OPTIONAL = ("plates",)
 
 # The four cuts of the cast list. Order is the reader's likely reach, not
 # alphabetical: everyone first, and the attention view last.
@@ -62,6 +67,12 @@ class Rail(Gtk.Box):
         self.append(self._box)
 
         self.choose("cast")
+
+    def offer(self, key: str, present: bool) -> None:
+        """Show an optional view, or take it away. Only the optional ones move."""
+        row = self._rows.get(key)
+        if row is not None and key in OPTIONAL:
+            row.set_visible(present)
 
     def choose(self, key: str) -> None:
         row = self._rows.get(key)

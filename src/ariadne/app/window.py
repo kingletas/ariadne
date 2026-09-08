@@ -36,6 +36,7 @@ from .ground import GroundView  # noqa: E402
 from .mapview import MapView  # noqa: E402
 from .pace import PaceView  # noqa: E402
 from .panels import AboutBook, Warnings, since_bookmark  # noqa: E402
+from .plates import PlateBand, PlatesView  # noqa: E402
 from .rail import FACETS, Rail  # noqa: E402
 
 WPM = 250
@@ -85,6 +86,14 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._bookmark.connect("moved", self._moved)
         content.append(self._bookmark)
 
+        # Registered with the axis like everything else, so the pictures sit
+        # under the chapters they belong to rather than in a list of their own.
+        self._plates = self._model.get("plates") or []
+        self._band = PlateBand()
+        self._band.connect("go", lambda _b, c: self._bookmark.set_chapter(c))
+        self._band.set_visible(bool(self._plates))
+        content.append(self._band)
+
         self._about = AboutBook()
         self._facets = self._facet_row()
         content.append(self._facets)
@@ -102,7 +111,10 @@ class ReaderWindow(Adw.ApplicationWindow):
         self._ground.connect("go", lambda _g, c: self._bookmark.set_chapter(c))
         self._ground.connect("ruled", lambda _g, m: self._after_ruling(m))
         self._warnings = Warnings()
+        self._gallery = PlatesView()
+        self._gallery.connect("go", lambda _g, c: self._bookmark.set_chapter(c))
 
+        self._stack.add_named(self._gallery, "plates")
         self._stack.add_named(self._cast, "cast")
         self._stack.add_named(self._pace, "pace")
         self._stack.add_named(self._map, "map")
@@ -153,7 +165,10 @@ class ReaderWindow(Adw.ApplicationWindow):
         return overlay
 
     def _draw_plumb(self, _area, cr, width, height, *_):
-        if self._view == "map":
+        # Only over views whose x means a chapter. The map draws associations
+        # and the gallery draws pictures; a line down either is decoration
+        # pretending to line up with something.
+        if self._view in ("map", "plates"):
             return
         palette = tokens.DARK if self._dark() else tokens.LIGHT
         span = max(1, width - 2 * axis.INSET)
@@ -424,7 +439,15 @@ class ReaderWindow(Adw.ApplicationWindow):
 
         self._settle(upto)
         self._rail.set_badge("warnings", self._visible_warnings(upto))
+        self._rail.offer("plates", bool(self._plates))
         self._facets.set_visible(self._view == "cast")
+        if self._plates:
+            self._band.show_plates(self._plates, upto, self._chapters, dark)
+
+        if self._view == "plates":
+            self._stack.set_visible_child_name("plates")
+            self._gallery.show_plates(self._plates, upto, self._chapters)
+            return
 
         if self._view == "pace":
             self._stack.set_visible_child_name("pace")

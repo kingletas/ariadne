@@ -101,6 +101,16 @@ row.rail-item:selected label { color: @accent_dark; }
 .bookmark { margin-top: 8px; margin-bottom: 0; }
 .bookmark:focus-visible { outline: 2px solid @accent; outline-offset: 4px; }
 
+/* --- the pictures --- */
+
+.plate { padding: 4px 0; }
+.plate picture {
+  border: 1px solid @line; border-radius: 8px; background: @surface;
+}
+.plate-caption { color: @ink; font-size: 0.95rem; font-family: __SERIF__; }
+.plate-where { color: @ink_faint; font-size: 0.8rem; padding: 0 6px; min-height: 22px; }
+.plate-where:hover { color: @accent_dark; background: @accent_faint; }
+
 /* --- the cast facets --- */
 
 button.chip {

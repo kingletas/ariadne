@@ -23,6 +23,7 @@ from .core.settings import MIN_USES
 from .decisions.sidecar import apply_decisions, load_decisions, sidecar_path
 from .ingest.book import load
 from .ingest.epub import epub_series
+from .ingest.illustrations import load_plates
 from .ingest.quotes import quote_convention
 from .ingest.series import load_series
 from .model.build import build_model, model_json
@@ -76,6 +77,10 @@ def open_book(paths, *, title=None, min_uses=None, spoil=False, decisions_path=N
     }
     model["relations"] = {k: v for k, v in model["relations"].items() if v}
     model["spoil"] = bool(spoil)
+    # Pictures somebody drew, filed against the chapter they may be seen from.
+    # The desktop reader shows them; the page deliberately does not, because a
+    # shareable file carrying somebody's artwork is a redistribution of it.
+    model["plates"] = load_plates(paths[0], len(chapters))
     model["pace"] = pace(chapters, presence, first)
 
     words = summarise_words(chapters)

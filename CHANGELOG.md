@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- **Illustrations, if the book has any.** A folder beside the book — `the-book.epub.illustrations/` — with a `plates.tsv` saying which chapter each picture may be seen from. Nothing is generated and nothing is inferred: Ariadne decides *when* a picture already drawn may be shown, which is the question it is built to answer. The pictures are marks on the same axis as everything else, so you can see where the book is illustrated and where it is bare, and a picture past your bookmark is not drawn. A Pictures view appears only when there is a folder to show.
+- The manifest is a manifest rather than a filename convention on purpose. `ch12-vael.png` breaks silently the day a chapter is inserted. Every way this one can be wrong — a missing file, a chapter outside the book, a plate listed twice, a path reaching out of the folder — is a named refusal.
+- The chapter a picture may be seen *from* is not the chapter it illustrates. A drawing of somebody at a place they have not reached is a spoiler filed under the wrong number, and only the person who drew it knows the difference.
+
 ### Changed
 
 - The bookmark is the chapter axis. It was a panel under the header with its own scale; it is now a strip at the top of the content column, and every chapter-indexed thing below it — cast strips, place bands, pace lines — is drawn to the same 1-to-the-book's-length scale. A line dropped through your position lands on the same chapter on all of them.
