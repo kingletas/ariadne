@@ -37,7 +37,7 @@ flatpak install ./ariadne_0.1.0.flatpak
 
 Or build one yourself with `make flatpak` to install it locally, or `make bundle` for the single file.
 
-Needs `org.gnome.Platform//50` and `org.gnome.Sdk//50`. It asks for your home directory, because the file it writes for your rulings goes next to the book and the file portal only grants the one file you picked. It asks for no network at all.
+Needs `org.gnome.Platform//50` and `org.gnome.Sdk//50`. It asks for your home directory so you can browse to a book without going through the file portal every time. It asks for no network at all.
 
 **From a clone:**
 
@@ -69,7 +69,7 @@ ariadne ~/Books/some-book.epub --app
 
 Or open Ariadne from your applications menu and pick a book.
 
-The window shows what the page shows, and here you can also correct it. When it lists Prince Andrew and Prince Andrew Bolkónski as two people, click one and tell it they are the same man. Notes, merges and warnings go into a small file next to the book, and there are fifty steps of undo.
+The window shows what the page shows, and here you can also correct it. When it lists Prince Andrew and Prince Andrew Bolkónski as two people, click one and tell it they are the same man. Notes, merges and warnings go into a small file of your own, and there are fifty steps of undo.
 
 Across the top is the bookmark, and it is also the chapter axis. Every strip and band below it is drawn to that same scale, so a line dropped through your position lands on the same chapter everywhere on screen. Drag it, or click any chapter on any strip. `[` and `]` step one chapter; Ctrl+G, or the position in the title bar, jumps to one you type.
 
@@ -78,6 +78,16 @@ Down the left: the cast, where the book has been, a map of who shares chapters w
 ![The detail drawer, asking whether two names are one person, with the chapters that name is in below it](docs/images/drawer.png)
 
 It doesn't guess at any of this. Two names might be one person or they might be two, and in some books that's the plot.
+
+### Where your rulings are kept
+
+In `~/.local/share/ariadne/books/`, one small JSON file per book. `ariadne --doctor` prints the path and how many books are in it.
+
+They used to live next to the book, and that broke on the books people actually own. A novel on a removable drive, on a read-only share, or opened through the Flatpak file portal — which hands over the one file you picked and nothing around it — is somewhere Ariadne cannot write. Every save failed quietly and the window said it had saved.
+
+**A book is found by what's in it, not where it is.** The filename is the book's name and a hash of its contents, so you can move your library, rename a file, or copy it to another disk and your rulings follow. Editing the book is a different matter: a re-download or a metadata change makes it a different file, and the old rulings stay under the old one.
+
+If you already have a `.ariadne.json` next to a book, it's read once and moved into the store. Nothing is written next to your books again. `--decisions PATH` still puts one wherever you want it.
 
 ### Where the book has been
 
@@ -134,7 +144,7 @@ ariadne book.epub --warn "24=someone does not make it through this chapter"
 
 At chapter 23 it says *something is coming* and keeps the text folded shut until you open it.
 
-Ariadne finds none of these itself. Tagging books by what happens in them is a fight it has no business joining, and a false positive costs somebody a book they would have been fine with. The warning is yours, it sits in the file next to the book, and you can hand it to someone else reading it.
+Ariadne finds none of these itself. Tagging books by what happens in them is a fight it has no business joining, and a false positive costs somebody a book they would have been fine with. The warning is yours, it sits in your own file, and you can hand it to someone else reading it.
 
 ## Layout
 
@@ -143,7 +153,7 @@ src/ariadne/
   core/         the refusal, the tunable numbers, the quoted-span pattern
   ingest/       files in, chapters out
   model/        chapters in, the index out — and the clipping every view uses
-  decisions/    the reader's own rulings, in a sidecar beside the book
+  decisions/    the reader's own rulings, in a sidecar keyed to the book
   position/     where the reader is
   analysis/     what can be said about a book without spoiling it
   ai/           the two commands that need an account

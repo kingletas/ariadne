@@ -147,20 +147,21 @@ def test_it_says_up_front_when_it_cannot_save(tmp_path):
     assert curation.saves_to, "the path is still where it would save"
 
 
-def test_a_drive_pulled_out_mid_read_is_reported_rather_than_raised(tmp_path):
+def test_a_place_that_stops_being_writable_is_reported_rather_than_raised(tmp_path):
     """It used to raise into a signal handler, which prints and carries on.
 
-    This is the removable-drive case literally: the book was on one, and a
-    sidecar that saved a moment ago can stop being writable without anything
-    about the application changing.
+    A store directory that has simply gone is remade -- that is a first run,
+    not a failure. This is the other case: somewhere a directory cannot be
+    made at all, which is what the file portal looked like from inside the
+    process.
     """
     import shutil
 
     from ariadne.app.curation import Curation
 
-    home = tmp_path / "drive"
+    home = tmp_path / "store"
     home.mkdir()
-    book = home / "book.epub.ariadne.json"
+    book = home / "book.ariadne.json"
     curation = Curation({"entities": [], "chapters": 9}, str(book))
     assert not curation.trouble, "a writable directory reported trouble"
 
@@ -168,8 +169,20 @@ def test_a_drive_pulled_out_mid_read_is_reported_rather_than_raised(tmp_path):
     assert book.is_file(), "a writable directory did not save"
 
     shutil.rmtree(home)
+    home.write_text("", encoding="utf-8")  # a file where the directory was
     curation.remember_position(5)  # must not raise
     assert curation.trouble, "a save that failed reported nothing"
+
+
+def test_a_store_that_does_not_exist_yet_is_made(tmp_path):
+    """The first run ever. Failing on a missing store would be the same loss."""
+    from ariadne.app.curation import Curation
+
+    book = tmp_path / "never" / "been" / "here" / "book.ariadne.json"
+    curation = Curation({"entities": [], "chapters": 9}, str(book))
+    assert not curation.trouble, curation.trouble
+    curation.remember_position(3)
+    assert book.is_file(), "a first run did not create its own store"
 
 
 def test_a_saveable_book_says_nothing_at_all(tmp_path):
@@ -179,3 +192,84 @@ def test_a_saveable_book_says_nothing_at_all(tmp_path):
     curation = Curation({"entities": [], "chapters": 4}, str(tmp_path / "b.ariadne.json"))
     curation.remember_position(1)
     assert curation.trouble == ""
+
+
+# --- where the rulings live ------------------------------------------------
+#
+# They were beside the book until 2026-09-08, when a book on a removable drive
+# opened through the Flatpak file portal lost an hour of them: the portal
+# grants the one file that was picked and not the directory around it, so every
+# save failed and the only trace was an orphaned temporary file.
+
+
+def test_the_store_is_not_beside_the_book(tmp_path, monkeypatch):
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = tmp_path / "somewhere" / "read-only" / "book.epub"
+    book.parent.mkdir(parents=True)
+    book.write_bytes(b"a book")
+
+    where = sidecar_path(str(book))
+    assert str(book.parent) not in where, "the rulings are still beside the book"
+    assert where.startswith(str(tmp_path / "store"))
+
+
+def test_a_book_is_found_by_what_is_in_it_not_where_it_sits(tmp_path, monkeypatch):
+    """So a library that gets reorganised does not lose every ruling in it."""
+    import shutil
+
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    first = tmp_path / "here" / "book.epub"
+    first.parent.mkdir(parents=True)
+    first.write_bytes(b"the same bytes")
+    moved = tmp_path / "elsewhere" / "book.epub"
+    moved.parent.mkdir(parents=True)
+    shutil.copy(first, moved)
+
+    assert sidecar_path(str(first)) == sidecar_path(str(moved))
+
+    different = tmp_path / "other.epub"
+    different.write_bytes(b"different bytes entirely")
+    assert sidecar_path(str(different)) != sidecar_path(str(first))
+
+
+def test_a_renamed_book_keeps_its_rulings(tmp_path, monkeypatch):
+    """The slug in the filename is for a human; the hash is what identifies it."""
+    from ariadne.decisions.sidecar import book_key
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = tmp_path / "Divergent.epub"
+    book.write_bytes(b"the same bytes")
+    before = book_key(str(book))
+    renamed = tmp_path / "01 - Divergent (2011).epub"
+    book.rename(renamed)
+    assert book_key(str(renamed)) == before
+
+
+def test_rulings_already_beside_a_book_are_read_once_and_never_written_again(tmp_path, monkeypatch):
+    """Upgrading must lose nothing somebody has already ruled on."""
+    import json
+
+    from ariadne.app.curation import Curation
+    from ariadne.decisions.sidecar import beside_book, decisions_for
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = tmp_path / "book.epub"
+    book.write_bytes(b"a book")
+    older = tmp_path / "book.epub.ariadne.json"
+    older.write_text(json.dumps({"position": 17, "hidden": ["Someone"]}), encoding="utf-8")
+
+    where, found = decisions_for(str(book))
+    assert found["position"] == 17, "an existing sidecar was not read"
+    assert found["hidden"] == ["Someone"], "existing rulings were not read"
+    assert where != beside_book(str(book)), "it would write beside the book again"
+
+    # And writing goes to the store, leaving the old file exactly as it was.
+    before = older.read_text(encoding="utf-8")
+    curation = Curation({"entities": [], "chapters": 40, "title": "A Book"}, where)
+    curation.remember_position(20)
+    assert older.read_text(encoding="utf-8") == before, "it wrote to the old sidecar"
+    assert json.loads(open(where, encoding="utf-8").read())["position"] == 20

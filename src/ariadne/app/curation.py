@@ -1,9 +1,9 @@
 """The reader's own rulings, and the undo behind them.
 
 Everything here writes the same sidecar the command line writes, in the same
-shape, beside the same book. Deleting the application leaves the file intact,
-which is the whole of the portability requirement -- so this is a second way
-into one store rather than a second store.
+shape, in the same store -- so this is a second way into one store rather than
+a second store. Deleting the application leaves the file intact, which is the
+whole of the portability requirement.
 
 Nothing merges on its own. Two mechanical signals for "these two names are one
 person" were tested over six novels and both failed, so ariadne proposes only
@@ -34,6 +34,9 @@ class Curation:
         self._path = path
         self._pristine = copy.deepcopy(model)
         self.decisions = load_decisions(path) if path else load_decisions("")
+        # The store is named by the book's file and its hash, so this is what
+        # a person reads when they open one of them to see what it is.
+        self.decisions["title"] = model.get("title", "")
         self._undo: list[tuple[str, dict]] = []
         self._trouble = self._probe()
         self.model = self._rebuild()
@@ -53,13 +56,14 @@ class Curation:
         if not self._path:
             return ""
         directory = os.path.dirname(os.path.abspath(self._path)) or "."
-        if not os.path.isdir(directory):
-            return f"there is no directory at {directory}"
-        # `os.access` answers about permission bits and a portal is not a
-        # permission bit. The only reliable question is whether a real file can
-        # be made and renamed the way a save does.
         probe = os.path.join(directory, ".ariadne-probe.tmp")
         try:
+            # Making the store is part of saving to it, so it is part of the
+            # question. A store that does not exist yet is a first run.
+            os.makedirs(directory, exist_ok=True)
+            # `os.access` answers about permission bits and a portal is not a
+            # permission bit. The only reliable question is whether a real file
+            # can be made and renamed the way a save does.
             with open(probe, "w", encoding="utf-8") as fh:
                 fh.write("")
             os.replace(probe, probe + "2")

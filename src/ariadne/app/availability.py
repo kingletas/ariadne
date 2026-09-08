@@ -13,6 +13,7 @@ cannot.
 from __future__ import annotations
 
 import importlib.util
+import os
 import shutil
 import sys
 
@@ -75,6 +76,18 @@ def missing() -> list[tuple[str, str, dict]]:
     return absent
 
 
+def where_rulings_go() -> str:
+    """The store, and whether it can be written. A store nobody can find is one
+    people worry about, and this is the command they run when they are worried."""
+    from ..decisions.sidecar import store_dir
+
+    directory = store_dir()
+    if not os.path.isdir(directory):
+        return f"{directory}  (made on the first ruling)"
+    kept = len([n for n in os.listdir(directory) if n.endswith(".json")])
+    return f"{directory}  ({kept} book{'' if kept == 1 else 's'})"
+
+
 def report(stream=None) -> int:
     """Say plainly what is here and what is not. Zero when the window will open."""
     out = stream or sys.stdout
@@ -90,6 +103,8 @@ def report(stream=None) -> int:
             f"  ·  PyGObject {gi.__version__}",
             file=out,
         )
+        print("", file=out)
+        print(f"  rulings  {where_rulings_go()}", file=out)
         return 0
 
     manager = package_manager()

@@ -14,6 +14,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - `--inspect` now answers for the illustrations folder too, including refusing on a manifest it cannot trust. Reading the book and then refusing an hour later is two answers to one question.
 
+### Changed
+
+- **Rulings are no longer kept next to the book.** They live in `~/.local/share/ariadne/books/`, one file per book, because books live where their owner keeps them and that is often somewhere nothing can be written. `ariadne --doctor` prints the path.
+- **A book is identified by its contents rather than its path.** Move your library, rename a file, copy it to another disk, and the rulings follow it. A `.ariadne.json` already beside a book is read once and moved into the store; nothing is written beside a book again. `--decisions PATH` still overrides.
+
 ### Fixed
 
 - **A book Ariadne cannot write beside lost every ruling silently, and the header said it had saved them.** Found on a real book opened from a removable drive through the Flatpak file portal, which grants the one file you picked and not the directory around it. Every bookmark move wrote a temporary file whose rename failed; the error went into a signal handler that prints and carries on; the header went on saying "Saved locally" for an hour of reading. It is now asked once, up front, before anything is relied on — and the header says **Cannot save**, with the reason, and says it out loud once.

@@ -1,6 +1,8 @@
 import contextlib
+import hashlib
 import json
 import os
+import re
 import tempfile
 from collections import OrderedDict
 
@@ -8,9 +10,25 @@ from collections import OrderedDict
 # Reader decisions -- the sidecar
 # ---------------------------------------------------------------------------
 #
-# Everything the reader decides lives in one JSON file beside the book, in a
-# shape a person can read and edit. Deleting ariadne leaves it intact, which is
-# the whole of the portability requirement.
+# Everything the reader decides lives in one JSON file, in a shape a person can
+# read and edit. Deleting ariadne leaves it intact, which is the whole of the
+# portability requirement.
+#
+# WHY IT IS NOT BESIDE THE BOOK ANY MORE
+# It was, and it lost somebody an hour of reading. Books live where their owner
+# keeps them, and that is often somewhere nothing may be written: a removable
+# drive, a read-only share, a folder reached through the Flatpak file portal,
+# which grants the one file that was picked and not the directory around it.
+# Every save failed, and the only trace was an orphaned temporary file.
+#
+# So the store is a directory ariadne owns and can always write, and a book is
+# found in it by the CONTENT of the file rather than by where it sits. A book
+# that is moved, renamed, or copied to another disk still finds its own
+# rulings; one that is edited is a different book, which is the honest answer
+# when the chapters may have moved under every decision already made.
+#
+# A sidecar already sitting beside a book is still read, once, so nothing
+# anybody has ruled on is lost. Nothing is written there again.
 #
 # WHY LINKS ARE SUGGESTED AND NEVER ASSERTED
 # Two mechanical signals for "these two names are one person" were tested over
@@ -25,9 +43,58 @@ from collections import OrderedDict
 # plot, which is the second reason never to assert one.
 
 
+def store_dir():
+    """Where rulings are kept. `ARIADNE_HOME` overrides it outright."""
+    named = os.environ.get("ARIADNE_HOME")
+    if named:
+        return os.path.join(os.path.abspath(os.path.expanduser(named)), "books")
+    data = os.environ.get("XDG_DATA_HOME") or os.path.join(os.path.expanduser("~"), ".local/share")
+    return os.path.join(data, "ariadne", "books")
+
+
+def book_key(book_path):
+    """What identifies a book: what is in it, not where it is.
+
+    A hash of the whole file. Measured at 1.1ms for a 932KB epub, so the
+    simple answer is also the affordable one and there is no partial-read rule
+    to be wrong about.
+    """
+    digest = hashlib.sha256()
+    with open(book_path, "rb") as fh:
+        for block in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()[:16]
+
+
 def sidecar_path(book_path):
-    base = os.path.abspath(book_path).rstrip(os.sep)
-    return base + ".ariadne.json"
+    """Where this book's rulings are written. Always somewhere writable."""
+    stem = os.path.splitext(os.path.basename(os.path.abspath(book_path).rstrip(os.sep)))[0]
+    # The slug is for a human opening the folder; the hash is what identifies
+    # the book. A title that is all punctuation still gets a usable name.
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", stem).strip("-").lower()[:48] or "book"
+    return os.path.join(store_dir(), "%s-%s.json" % (slug, book_key(book_path)))
+
+
+def beside_book(book_path):
+    """Where rulings used to be written, and are still read from once."""
+    return os.path.abspath(book_path).rstrip(os.sep) + ".ariadne.json"
+
+
+def decisions_for(book_path):
+    """This book's rulings, and where to write them from now on.
+
+    Reads an older sidecar beside the book when the store has nothing yet, so
+    upgrading loses none of them. The path returned is always in the store.
+    """
+    path = sidecar_path(book_path)
+    if os.path.isfile(path):
+        return path, load_decisions(path)
+    older = beside_book(book_path)
+    if os.path.isfile(older):
+        found = load_decisions(older)
+        found["moved_from"] = older
+        return path, found
+    return path, load_decisions(path)
 
 
 def load_decisions(path):
@@ -45,6 +112,9 @@ def load_decisions(path):
     d.setdefault("relations", {})  # name -> [{"at": chapter index, "text": str}]
     d.setdefault("warnings", [])  # [{"at": chapter index, "text": str}]
     d.setdefault("settings", {})  # place name -> True kept, False struck
+    # So a person opening the store can tell which file is which book. The
+    # filename carries the same thing; this is what survives a rename of it.
+    d.setdefault("title", "")
     return d
 
 
@@ -57,6 +127,9 @@ def save_decisions(path, d):
     new one and never half of each.
     """
     directory = os.path.dirname(os.path.abspath(path)) or "."
+    # The store is ours to make. A first run has no directory yet, and failing
+    # on that would be the same silent loss in a different place.
+    os.makedirs(directory, exist_ok=True)
     handle, temporary = tempfile.mkstemp(dir=directory, prefix=".ariadne-", suffix=".tmp")
     try:
         with os.fdopen(handle, "w", encoding="utf-8") as fh:

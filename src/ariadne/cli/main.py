@@ -35,9 +35,9 @@ from ..core.settings import MIN_USES
 from ..decisions.sidecar import (
     apply_decisions,
     containment_links,
+    decisions_for,
     load_decisions,
     save_decisions,
-    sidecar_path,
 )
 from ..ingest.book import load
 from ..ingest.epub import epub_series
@@ -348,8 +348,10 @@ def main():
             sys.exit("ariadne: %s" % exc)
         print("ariadne: position read as chapter %d of %d" % (upto + 1, len(chapters)))
 
-    dpath = args.decisions or sidecar_path(args.book[0])
-    decisions = load_decisions(dpath)
+    if args.decisions:
+        dpath, decisions = args.decisions, load_decisions(args.decisions)
+    else:
+        dpath, decisions = decisions_for(args.book[0])
 
     if args.export:
         json.dump(decisions, sys.stdout, ensure_ascii=False, indent=1, sort_keys=True)

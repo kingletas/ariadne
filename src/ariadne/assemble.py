@@ -20,7 +20,7 @@ from .analysis.prose import (
     warning_map,
 )
 from .core.settings import MIN_USES
-from .decisions.sidecar import apply_decisions, load_decisions, sidecar_path
+from .decisions.sidecar import apply_decisions, decisions_for, load_decisions
 from .ingest.book import load
 from .ingest.epub import epub_series
 from .ingest.illustrations import load_plates
@@ -54,8 +54,10 @@ def open_book(paths, *, title=None, min_uses=None, spoil=False, decisions_path=N
         else quote_convention("\n".join(chapters))
     )
 
-    sidecar = decisions_path or sidecar_path(paths[0])
-    decisions = load_decisions(sidecar)
+    if decisions_path:
+        sidecar, decisions = decisions_path, load_decisions(decisions_path)
+    else:
+        sidecar, decisions = decisions_for(paths[0])
 
     presence, counts, first = build_model(chapters, min_uses or MIN_USES)
 

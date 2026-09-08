@@ -15,10 +15,14 @@ sdk: org.gnome.Sdk
 command: ariadne
 
 finish-args:
-  # Books live wherever their owner keeps them, and the rulings file is written
-  # beside the book so that deleting Ariadne leaves it intact. The file portal
-  # grants the one file somebody picked and not its neighbours, so it cannot
-  # write that sidecar -- home access is what the promise costs.
+  # Books live wherever their owner keeps them -- a removable drive, a share,
+  # a folder reached through the file portal, which grants the one file
+  # somebody picked and not the directory around it. So the rulings are NOT
+  # written beside the book: they go in a store under XDG_DATA_HOME, which is
+  # always writable and outlives the book being moved.
+  #
+  # Home access is still what opening a book without the portal costs, and a
+  # reader who keeps their library in ~/Books expects to browse to it.
   - --filesystem=home
   - --socket=wayland
   - --socket=fallback-x11
