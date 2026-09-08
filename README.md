@@ -85,7 +85,7 @@ In `~/.local/share/ariadne/books/`, one small JSON file per book. `ariadne --doc
 
 They used to live next to the book, and that broke on the books people actually own. A novel on a removable drive, on a read-only share, or opened through the Flatpak file portal — which hands over the one file you picked and nothing around it — is somewhere Ariadne cannot write. Every save failed quietly and the window said it had saved.
 
-**A book is found by what's in it, not where it is.** The filename is the book's name and a hash of its contents, so you can move your library, rename a file, or copy it to another disk and your rulings follow. Editing the book is a different matter: a re-download or a metadata change makes it a different file, and the old rulings stay under the old one.
+**A book is found by what's in it, not where it is.** The filename is the book's title and a hash of its contents, and only the hash decides which book it is. `Divergent.epub`, `01 - Divergent - Veronica Roth (2011).epub` and `[1] divergent_RETAIL.epub` are one file with one set of rulings — move your library, rename a file, or copy it to another disk and they follow. The name comes from the book's own title rather than your filename, because a filename is a shelving convention and it changes; whatever name a book gets first is the one it keeps. Editing the book is a different matter: a re-download or a metadata change makes it a different file, and the old rulings stay under the old one.
 
 If you already have a `.ariadne.json` next to a book, it's read once and moved into the store. Nothing is written next to your books again. `--decisions PATH` still puts one wherever you want it.
 

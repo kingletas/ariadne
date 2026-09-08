@@ -4,6 +4,7 @@ import json
 import os
 import re
 import tempfile
+import unicodedata
 from collections import OrderedDict
 
 # ---------------------------------------------------------------------------
@@ -66,13 +67,73 @@ def book_key(book_path):
     return digest.hexdigest()[:16]
 
 
-def sidecar_path(book_path):
-    """Where this book's rulings are written. Always somewhere writable."""
-    stem = os.path.splitext(os.path.basename(os.path.abspath(book_path).rstrip(os.sep)))[0]
-    # The slug is for a human opening the folder; the hash is what identifies
-    # the book. A title that is all punctuation still gets a usable name.
-    slug = re.sub(r"[^A-Za-z0-9]+", "-", stem).strip("-").lower()[:48] or "book"
-    return os.path.join(store_dir(), "%s-%s.json" % (slug, book_key(book_path)))
+# What a file name says about a book and a title does not: a series index, the
+# year of the edition, the author repeated. Stripped for readability only --
+# none of it decides which book this is.
+FILENAME_NOISE = (
+    re.compile(r"^\s*[\[(]?\d{1,3}[\])]?\s*[-._]\s*"),  # "01 - ", "[3] ", "12. "
+    re.compile(r"\s*[\[(]\s*(?:19|20)\d{2}\s*[\])]\s*$"),  # a trailing "(2011)"
+    re.compile(r"\s*[-_]\s*(?:epub|pdf|retail|v\d+)\s*$", re.IGNORECASE),
+)
+
+
+def store_slug(book_path, title=None):
+    """A readable name for the file in the store. It never decides identity.
+
+    The book's own title is preferred over its filename, because a filename is
+    somebody's shelving convention and changes when they reorganise. When there
+    is no title, the shelving convention is cleaned up rather than trusted.
+    """
+    if title and title.strip():
+        raw = title.strip()
+    else:
+        raw = os.path.splitext(os.path.basename(os.path.abspath(book_path).rstrip(os.sep)))[0]
+        for pattern in FILENAME_NOISE:
+            raw = pattern.sub("", raw)
+    # NFKC first, so a title composed one way and decomposed another reads the
+    # same. Letters outside ASCII are kept: this reads Russian books, and
+    # "Война и мир" collapsing to "book" is a name nobody can use. The hash is
+    # what identifies the file, so the name only has to be legible.
+    raw = unicodedata.normalize("NFKC", raw)
+    slug = re.sub(r"[^\w]+", "-", raw, flags=re.UNICODE).strip("-_").lower()[:48]
+    return slug or "book"
+
+
+def in_store(key):
+    """Any file already kept for this book, whatever somebody named it.
+
+    The hash is the identity and the slug is decoration, so a book renamed on
+    disk must not open a second file. It did: `Divergent.epub` and
+    `01 - Divergent - Veronica Roth (2011).epub` are the same bytes and made
+    two of them.
+
+    Newest wins where there is more than one, which can only happen to a store
+    written before this was true.
+
+    The name it already has is kept. Renaming it to match whatever the book is
+    called today was tried and was worse: four spellings of one book renamed
+    the file four times, and the read that followed each rename went to the
+    path it had just moved away from.
+    """
+    directory = store_dir()
+    if not os.path.isdir(directory):
+        return None
+    found = [
+        os.path.join(directory, name)
+        for name in os.listdir(directory)
+        if name.endswith("-%s.json" % key)
+    ]
+    if not found:
+        return None
+    return max(found, key=os.path.getmtime)
+
+
+def sidecar_path(book_path, title=None):
+    """Where this book's rulings are. Always somewhere writable, always one file."""
+    key = book_key(book_path)
+    return in_store(key) or os.path.join(
+        store_dir(), "%s-%s.json" % (store_slug(book_path, title), key)
+    )
 
 
 def beside_book(book_path):
@@ -80,13 +141,14 @@ def beside_book(book_path):
     return os.path.abspath(book_path).rstrip(os.sep) + ".ariadne.json"
 
 
-def decisions_for(book_path):
+def decisions_for(book_path, title=None):
     """This book's rulings, and where to write them from now on.
 
     Reads an older sidecar beside the book when the store has nothing yet, so
-    upgrading loses none of them. The path returned is always in the store.
+    upgrading loses none of them. The path returned is always in the store, and
+    always the one file this book already has.
     """
-    path = sidecar_path(book_path)
+    path = sidecar_path(book_path, title)
     if os.path.isfile(path):
         return path, load_decisions(path)
     older = beside_book(book_path)

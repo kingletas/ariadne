@@ -57,7 +57,7 @@ def open_book(paths, *, title=None, min_uses=None, spoil=False, decisions_path=N
     if decisions_path:
         sidecar, decisions = decisions_path, load_decisions(decisions_path)
     else:
-        sidecar, decisions = decisions_for(paths[0])
+        sidecar, decisions = decisions_for(paths[0], title_read)
 
     presence, counts, first = build_model(chapters, min_uses or MIN_USES)
 

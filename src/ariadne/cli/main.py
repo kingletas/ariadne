@@ -351,7 +351,7 @@ def main():
     if args.decisions:
         dpath, decisions = args.decisions, load_decisions(args.decisions)
     else:
-        dpath, decisions = decisions_for(args.book[0])
+        dpath, decisions = decisions_for(args.book[0], title)
 
     if args.export:
         json.dump(decisions, sys.stdout, ensure_ascii=False, indent=1, sort_keys=True)

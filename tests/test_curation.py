@@ -5,6 +5,7 @@ the first pillar: never lose somebody's work.
 """
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -236,17 +237,98 @@ def test_a_book_is_found_by_what_is_in_it_not_where_it_sits(tmp_path, monkeypatc
     assert sidecar_path(str(different)) != sidecar_path(str(first))
 
 
-def test_a_renamed_book_keeps_its_rulings(tmp_path, monkeypatch):
-    """The slug in the filename is for a human; the hash is what identifies it."""
-    from ariadne.decisions.sidecar import book_key
+# The shelving conventions one book turns up under. Same bytes every time.
+SPELLINGS = (
+    "Divergent.epub",
+    "01 - Divergent - Veronica Roth (2011).epub",
+    "[1] divergent_RETAIL.epub",
+    "DIVERGENT (2011).epub",
+    "divergent.v2.epub",
+)
+
+
+def test_one_book_spelled_five_ways_is_one_file(tmp_path, monkeypatch):
+    """The defect this closes: the slug decided the filename, so a book renamed
+    on disk opened a second store file and the rulings in the first vanished."""
+    from ariadne.decisions.sidecar import decisions_for, save_decisions, store_dir
 
     monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
-    book = tmp_path / "Divergent.epub"
-    book.write_bytes(b"the same bytes")
-    before = book_key(str(book))
-    renamed = tmp_path / "01 - Divergent (2011).epub"
-    book.rename(renamed)
-    assert book_key(str(renamed)) == before
+    books = []
+    for name in SPELLINGS:
+        book = tmp_path / name
+        book.write_bytes(b"the same bytes")
+        books.append(book)
+
+    where, found = decisions_for(str(books[0]), "Divergent")
+    found["position"] = 12
+    save_decisions(where, found)
+
+    for book in books:
+        again, rulings = decisions_for(str(book), "Divergent")
+        assert again == where, f"{book.name} opened a different file"
+        assert rulings["position"] == 12, f"{book.name} lost the rulings"
+
+    kept = os.listdir(store_dir())
+    assert kept == [os.path.basename(where)], f"the store grew a duplicate: {kept}"
+
+
+def test_the_name_it_is_given_first_is_the_name_it_keeps(tmp_path, monkeypatch):
+    """Renaming to match today's filename was tried and churned the store."""
+    from ariadne.decisions.sidecar import decisions_for, save_decisions
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    for name in SPELLINGS:
+        (tmp_path / name).write_bytes(b"the same bytes")
+
+    where, found = decisions_for(str(tmp_path / SPELLINGS[0]), "Divergent")
+    save_decisions(where, found)
+    for name in SPELLINGS[1:]:
+        again, _ = decisions_for(str(tmp_path / name), "Divergent")
+        assert again == where, f"{name} renamed the stored file"
+
+
+def test_a_filename_is_cleaned_up_when_there_is_no_title(tmp_path, monkeypatch):
+    """A shelving convention is not a title, and it is all there is sometimes."""
+    from ariadne.decisions.sidecar import store_slug
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = tmp_path / "01 - Divergent (2011).epub"
+    book.write_bytes(b"x")
+    assert store_slug(str(book)) == "divergent"
+    assert store_slug(str(book), "Divergent") == "divergent"
+    # A title wins over the filename, because a filename is somebody's shelf.
+    assert store_slug(str(tmp_path / "09 - whatever.epub"), "The Atherion") == "the-atherion"
+
+
+def test_a_name_survives_the_alphabet_it_is_written_in(tmp_path, monkeypatch):
+    """This reads Russian books. A title collapsing to "book" is unusable."""
+    import unicodedata
+
+    from ariadne.decisions.sidecar import store_slug
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    assert store_slug("/x/y.epub", "Война и мир") == "война-и-мир"
+    assert store_slug("/x/y.epub", "三体") == "三体"
+    # Composed and decomposed forms of one title are one name.
+    same = "Café Society"
+    assert store_slug("/x/y.epub", unicodedata.normalize("NFD", same)) == store_slug(
+        "/x/y.epub", unicodedata.normalize("NFC", same)
+    )
+    # And a title with nothing in it a filesystem can use still gets a name.
+    assert store_slug("/x/y.epub", "!!! ???") == "book"
+
+
+def test_a_book_that_was_edited_is_a_different_book(tmp_path, monkeypatch):
+    """Stated rather than assumed: the chapters may have moved under every
+    decision already made, so the old rulings stay under the old file."""
+    from ariadne.decisions.sidecar import sidecar_path
+
+    monkeypatch.setenv("ARIADNE_HOME", str(tmp_path / "store"))
+    book = tmp_path / "book.epub"
+    book.write_bytes(b"first edition")
+    before = sidecar_path(str(book))
+    book.write_bytes(b"second edition, re-downloaded")
+    assert sidecar_path(str(book)) != before
 
 
 def test_rulings_already_beside_a_book_are_read_once_and_never_written_again(tmp_path, monkeypatch):

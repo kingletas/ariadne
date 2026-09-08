@@ -17,7 +17,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - **Rulings are no longer kept next to the book.** They live in `~/.local/share/ariadne/books/`, one file per book, because books live where their owner keeps them and that is often somewhere nothing can be written. `ariadne --doctor` prints the path.
-- **A book is identified by its contents rather than its path.** Move your library, rename a file, copy it to another disk, and the rulings follow it. A `.ariadne.json` already beside a book is read once and moved into the store; nothing is written beside a book again. `--decisions PATH` still overrides.
+- **A book is identified by its contents rather than its path or its name.** Move your library, rename a file, copy it to another disk, and the rulings follow it. Five spellings of one book — a series index, a year, a `RETAIL` tag, different case — are one file. The readable half of the name comes from the book's own title, normalised, and keeps the alphabet it was written in. A `.ariadne.json` already beside a book is read once and moved into the store; nothing is written beside a book again. `--decisions PATH` still overrides.
 
 ### Fixed
 
