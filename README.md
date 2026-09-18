@@ -174,6 +174,7 @@ Neither of those is a promise in a file. `tests/test_layering.py` reads the impo
 | | |
 |---|---|
 | [Getting started](docs/getting-started.md) | Install it, open a book, and what to do first |
+| [Why Ariadne exists](docs/why.md) | The problem it was built for, and what that decided |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to change it without breaking the one rule |
 | [SECURITY.md](SECURITY.md) | What it reads, what leaves your machine, and what is still open |
 | [CHANGELOG.md](CHANGELOG.md) | What changed |
