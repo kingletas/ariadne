@@ -33,15 +33,10 @@ build-backend = "hatchling.build"
 path = "src/ariadne/__init__.py"
 
 [tool.hatch.build.targets.wheel]
+# Every tracked file under the package ships, the measured bands in data/ and the
+# two fonts with their licence included. A force-include of them adds each twice,
+# and hatchling refuses the wheel.
 packages = ["src/ariadne"]
-
-# The measured bands ship with the code. A wheel without them answers `--corpus`
-# with nothing and says why nowhere.
-[tool.hatch.build.targets.wheel.force-include]
-"src/ariadne/data/corpus.json" = "ariadne/data/corpus.json"
-# The two faces the profile is set in, with their licence. A wheel is not a
-# font path, so `app.assets.use_bundled_fonts` is what makes them resolvable.
-"src/ariadne/app/assets/fonts" = "ariadne/app/assets/fonts"
 
 [tool.ruff]
 line-length = 100
